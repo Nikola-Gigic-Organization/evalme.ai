@@ -1,0 +1,38 @@
+query allUsers {
+  Users {
+    docs {
+      id
+      email
+    }
+  }
+}
+
+query allTags {
+  Tags {
+    docs {
+      id
+      name
+    }
+  }
+}
+
+query getTag($id: Int!) {
+  Tag(id: $id) {
+    id
+    name
+  }
+}
+
+mutation login($email: String!, $password: String!) {
+  loginUser(email: $email, password: $password) {
+    user {
+      email
+    }
+    exp
+    token
+  }
+}
+
+mutation logout {
+  logoutUser
+}
