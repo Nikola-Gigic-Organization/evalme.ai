@@ -1,67 +1,39 @@
 import { cookies } from "next/headers";
+import { LoginForm } from "./components";
+import { apolloClient } from "@/lib";
+import { AllUsersDocument } from "@/gql/graphql";
 
-import { apolloClient } from "../lib";
-import {
-  AllUsersDocument,
-  LoginDocument,
-  LogoutDocument,
-} from "../gql/graphql";
+import { loginAction, logoutAction } from "./actions";
 
 export default async function Page(): Promise<JSX.Element> {
-  const loginAction = async () => {
-    "use server";
-
-    const { data } = await apolloClient.mutate({
-      mutation: LoginDocument,
-      variables: {
-        email: "aaaa@aaa.com",
-        password: "aaaa",
-      },
-    });
-
-    if (data?.loginUser?.token) {
-      cookies().set("token", data?.loginUser?.token, {
-        maxAge: 30 * 24 * 60 * 60,
-        path: "/",
-      });
-    } else {
-      console.error("No token");
-    }
-  };
-
-  const logoutAction = async () => {
-    "use server";
-
-    const { data } = await apolloClient.mutate({
-      mutation: LogoutDocument,
-    });
-
-    if (data?.logoutUser) {
-      cookies().delete("token");
-    } else {
-      console.error("No token");
-    }
-  };
-
   const token = cookies().get("token");
 
-  if (token) {
+  try {
     await apolloClient.query({
       query: AllUsersDocument,
     });
+  } catch (error: any) {
+    console.error("Error: ", error);
   }
+
+  const handleLogout = async () => {
+    "use server";
+
+    await logoutAction();
+  };
 
   return (
     <div className="flex w-full h-screen items-center justify-center flex-col">
       <h1>Page</h1>
       {token ? (
-        <form action={logoutAction}>
+        <form
+          action={handleLogout}
+          className="flex flex-col items-center justify-center"
+        >
           <button type="submit">Logout</button>
         </form>
       ) : (
-        <form action={loginAction}>
-          <button type="submit">Login</button>
-        </form>
+        <LoginForm loginAction={loginAction} />
       )}
     </div>
   );
