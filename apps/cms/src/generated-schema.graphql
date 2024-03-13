@@ -7,6 +7,9 @@ type Query {
   Tag(id: Int!, draft: Boolean): Tag
   Tags(draft: Boolean, where: Tag_where, limit: Int, page: Int, sort: String): Tags
   docAccessTag(id: Int!): tagsDocAccess
+  Topic(id: Int!, draft: Boolean): Topic
+  Topics(draft: Boolean, where: Topic_where, limit: Int, page: Int, sort: String): Topics
+  docAccessTopic(id: Int!): topicsDocAccess
   PayloadPreference(id: Int!, draft: Boolean): PayloadPreference
   PayloadPreferences(draft: Boolean, where: PayloadPreference_where, limit: Int, page: Int, sort: String): PayloadPreferences
   docAccessPayloadPreference(id: Int!): payload_preferencesDocAccess
@@ -458,6 +461,315 @@ type TagsDeleteDocAccess {
   where: JSONObject
 }
 
+type Topic {
+  id: Int
+  slug: String!
+  title: String!
+  description: String
+  tags: [Tag!]
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type Topics {
+  docs: [Topic]
+  hasNextPage: Boolean
+  hasPrevPage: Boolean
+  limit: Int
+  nextPage: Int
+  offset: Int
+  page: Int
+  pagingCounter: Int
+  prevPage: Int
+  totalDocs: Int
+  totalPages: Int
+}
+
+input Topic_where {
+  slug: Topic_slug_operator
+  title: Topic_title_operator
+  description: Topic_description_operator
+  tags: Topic_tags_operator
+  updatedAt: Topic_updatedAt_operator
+  createdAt: Topic_createdAt_operator
+  id: Topic_id_operator
+  AND: [Topic_where_and]
+  OR: [Topic_where_or]
+}
+
+input Topic_slug_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
+input Topic_title_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
+input Topic_description_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  exists: Boolean
+}
+
+input Topic_tags_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
+  exists: Boolean
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+input Topic_updatedAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Topic_createdAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input Topic_id_operator {
+  equals: Int
+  not_equals: Int
+  greater_than_equal: Int
+  greater_than: Int
+  less_than_equal: Int
+  less_than: Int
+  exists: Boolean
+}
+
+input Topic_where_and {
+  slug: Topic_slug_operator
+  title: Topic_title_operator
+  description: Topic_description_operator
+  tags: Topic_tags_operator
+  updatedAt: Topic_updatedAt_operator
+  createdAt: Topic_createdAt_operator
+  id: Topic_id_operator
+  AND: [Topic_where_and]
+  OR: [Topic_where_or]
+}
+
+input Topic_where_or {
+  slug: Topic_slug_operator
+  title: Topic_title_operator
+  description: Topic_description_operator
+  tags: Topic_tags_operator
+  updatedAt: Topic_updatedAt_operator
+  createdAt: Topic_createdAt_operator
+  id: Topic_id_operator
+  AND: [Topic_where_and]
+  OR: [Topic_where_or]
+}
+
+type topicsDocAccess {
+  fields: TopicsDocAccessFields
+  create: TopicsCreateDocAccess
+  read: TopicsReadDocAccess
+  update: TopicsUpdateDocAccess
+  delete: TopicsDeleteDocAccess
+}
+
+type TopicsDocAccessFields {
+  slug: TopicsDocAccessFields_slug
+  title: TopicsDocAccessFields_title
+  description: TopicsDocAccessFields_description
+  tags: TopicsDocAccessFields_tags
+  updatedAt: TopicsDocAccessFields_updatedAt
+  createdAt: TopicsDocAccessFields_createdAt
+}
+
+type TopicsDocAccessFields_slug {
+  create: TopicsDocAccessFields_slug_Create
+  read: TopicsDocAccessFields_slug_Read
+  update: TopicsDocAccessFields_slug_Update
+  delete: TopicsDocAccessFields_slug_Delete
+}
+
+type TopicsDocAccessFields_slug_Create {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_slug_Read {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_slug_Update {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_slug_Delete {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_title {
+  create: TopicsDocAccessFields_title_Create
+  read: TopicsDocAccessFields_title_Read
+  update: TopicsDocAccessFields_title_Update
+  delete: TopicsDocAccessFields_title_Delete
+}
+
+type TopicsDocAccessFields_title_Create {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_title_Read {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_title_Update {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_title_Delete {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_description {
+  create: TopicsDocAccessFields_description_Create
+  read: TopicsDocAccessFields_description_Read
+  update: TopicsDocAccessFields_description_Update
+  delete: TopicsDocAccessFields_description_Delete
+}
+
+type TopicsDocAccessFields_description_Create {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_description_Read {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_description_Update {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_description_Delete {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_tags {
+  create: TopicsDocAccessFields_tags_Create
+  read: TopicsDocAccessFields_tags_Read
+  update: TopicsDocAccessFields_tags_Update
+  delete: TopicsDocAccessFields_tags_Delete
+}
+
+type TopicsDocAccessFields_tags_Create {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_tags_Read {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_tags_Update {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_tags_Delete {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_updatedAt {
+  create: TopicsDocAccessFields_updatedAt_Create
+  read: TopicsDocAccessFields_updatedAt_Read
+  update: TopicsDocAccessFields_updatedAt_Update
+  delete: TopicsDocAccessFields_updatedAt_Delete
+}
+
+type TopicsDocAccessFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_createdAt {
+  create: TopicsDocAccessFields_createdAt_Create
+  read: TopicsDocAccessFields_createdAt_Read
+  update: TopicsDocAccessFields_createdAt_Update
+  delete: TopicsDocAccessFields_createdAt_Delete
+}
+
+type TopicsDocAccessFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TopicsDocAccessFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type TopicsCreateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicsReadDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicsUpdateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicsDeleteDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
 type PayloadPreference {
   id: Int
   user: PayloadPreference_User_Relationship!
@@ -477,11 +789,6 @@ enum PayloadPreference_User_RelationTo {
 }
 
 union PayloadPreference_User = User
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
 
 type PayloadPreferences {
   docs: [PayloadPreference]
@@ -747,6 +1054,7 @@ type Access {
   canAccessAdmin: Boolean!
   users: usersAccess
   tags: tagsAccess
+  topics: topicsAccess
   payload_preferences: payload_preferencesAccess
 }
 
@@ -986,6 +1294,181 @@ type TagsDeleteAccess {
   where: JSONObject
 }
 
+type topicsAccess {
+  fields: TopicsFields
+  create: TopicsCreateAccess
+  read: TopicsReadAccess
+  update: TopicsUpdateAccess
+  delete: TopicsDeleteAccess
+}
+
+type TopicsFields {
+  slug: TopicsFields_slug
+  title: TopicsFields_title
+  description: TopicsFields_description
+  tags: TopicsFields_tags
+  updatedAt: TopicsFields_updatedAt
+  createdAt: TopicsFields_createdAt
+}
+
+type TopicsFields_slug {
+  create: TopicsFields_slug_Create
+  read: TopicsFields_slug_Read
+  update: TopicsFields_slug_Update
+  delete: TopicsFields_slug_Delete
+}
+
+type TopicsFields_slug_Create {
+  permission: Boolean!
+}
+
+type TopicsFields_slug_Read {
+  permission: Boolean!
+}
+
+type TopicsFields_slug_Update {
+  permission: Boolean!
+}
+
+type TopicsFields_slug_Delete {
+  permission: Boolean!
+}
+
+type TopicsFields_title {
+  create: TopicsFields_title_Create
+  read: TopicsFields_title_Read
+  update: TopicsFields_title_Update
+  delete: TopicsFields_title_Delete
+}
+
+type TopicsFields_title_Create {
+  permission: Boolean!
+}
+
+type TopicsFields_title_Read {
+  permission: Boolean!
+}
+
+type TopicsFields_title_Update {
+  permission: Boolean!
+}
+
+type TopicsFields_title_Delete {
+  permission: Boolean!
+}
+
+type TopicsFields_description {
+  create: TopicsFields_description_Create
+  read: TopicsFields_description_Read
+  update: TopicsFields_description_Update
+  delete: TopicsFields_description_Delete
+}
+
+type TopicsFields_description_Create {
+  permission: Boolean!
+}
+
+type TopicsFields_description_Read {
+  permission: Boolean!
+}
+
+type TopicsFields_description_Update {
+  permission: Boolean!
+}
+
+type TopicsFields_description_Delete {
+  permission: Boolean!
+}
+
+type TopicsFields_tags {
+  create: TopicsFields_tags_Create
+  read: TopicsFields_tags_Read
+  update: TopicsFields_tags_Update
+  delete: TopicsFields_tags_Delete
+}
+
+type TopicsFields_tags_Create {
+  permission: Boolean!
+}
+
+type TopicsFields_tags_Read {
+  permission: Boolean!
+}
+
+type TopicsFields_tags_Update {
+  permission: Boolean!
+}
+
+type TopicsFields_tags_Delete {
+  permission: Boolean!
+}
+
+type TopicsFields_updatedAt {
+  create: TopicsFields_updatedAt_Create
+  read: TopicsFields_updatedAt_Read
+  update: TopicsFields_updatedAt_Update
+  delete: TopicsFields_updatedAt_Delete
+}
+
+type TopicsFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type TopicsFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type TopicsFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type TopicsFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TopicsFields_createdAt {
+  create: TopicsFields_createdAt_Create
+  read: TopicsFields_createdAt_Read
+  update: TopicsFields_createdAt_Update
+  delete: TopicsFields_createdAt_Delete
+}
+
+type TopicsFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TopicsFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TopicsFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TopicsFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type TopicsCreateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicsReadAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicsUpdateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicsDeleteAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
 type payload_preferencesAccess {
   fields: PayloadPreferencesFields
   create: PayloadPreferencesCreateAccess
@@ -1151,6 +1634,9 @@ type Mutation {
   createTag(data: mutationTagInput!, draft: Boolean): Tag
   updateTag(id: Int!, autosave: Boolean, data: mutationTagUpdateInput!, draft: Boolean): Tag
   deleteTag(id: Int!): Tag
+  createTopic(data: mutationTopicInput!, draft: Boolean): Topic
+  updateTopic(id: Int!, autosave: Boolean, data: mutationTopicUpdateInput!, draft: Boolean): Topic
+  deleteTopic(id: Int!): Topic
   createPayloadPreference(data: mutationPayloadPreferenceInput!, draft: Boolean): PayloadPreference
   updatePayloadPreference(id: Int!, autosave: Boolean, data: mutationPayloadPreferenceUpdateInput!, draft: Boolean): PayloadPreference
   deletePayloadPreference(id: Int!): PayloadPreference
@@ -1212,6 +1698,24 @@ input mutationTagInput {
 
 input mutationTagUpdateInput {
   name: String
+  updatedAt: String
+  createdAt: String
+}
+
+input mutationTopicInput {
+  slug: String!
+  title: String!
+  description: String
+  tags: [Int]
+  updatedAt: String
+  createdAt: String
+}
+
+input mutationTopicUpdateInput {
+  slug: String
+  title: String
+  description: String
+  tags: [Int]
   updatedAt: String
   createdAt: String
 }

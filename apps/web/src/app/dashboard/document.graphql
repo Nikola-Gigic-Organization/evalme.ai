@@ -1,0 +1,13 @@
+query getAllTopics {
+  Topics {
+    docs {
+      id
+      title
+      description
+      tags {
+        id
+        name
+      }
+    }
+  }
+}

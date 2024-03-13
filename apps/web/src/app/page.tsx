@@ -1,33 +1,17 @@
 import { cookies } from "next/headers";
 import { LoginForm } from "./components";
-import { apolloClient } from "@/lib";
-import { AllUsersDocument } from "@/gql/graphql";
 
 import { loginAction, logoutAction } from "./actions";
 
 export default async function Page(): Promise<JSX.Element> {
   const token = cookies().get("token");
 
-  try {
-    await apolloClient.query({
-      query: AllUsersDocument,
-    });
-  } catch (error: any) {
-    console.error("Error: ", error);
-  }
-
-  const handleLogout = async () => {
-    "use server";
-
-    await logoutAction();
-  };
-
   return (
-    <div className="flex w-full h-screen items-center justify-center flex-col">
+    <div className="flex h-screen w-full flex-col items-center justify-center">
       <h1>Page</h1>
-      {token ? (
+      {token?.value ? (
         <form
-          action={handleLogout}
+          action={logoutAction}
           className="flex flex-col items-center justify-center"
         >
           <button type="submit">Logout</button>

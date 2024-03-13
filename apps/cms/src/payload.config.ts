@@ -6,22 +6,8 @@ import { webpackBundler } from "@payloadcms/bundler-webpack";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { buildConfig } from "payload/config";
 
-import { Users, Tags } from "./collections";
-
-const loginUserResolver = async (parent, args, context) => {
-  const result = await context.login({
-    collection: "Users",
-    data: {
-      email: args.email,
-      password: args.password,
-    },
-  });
-
-  return {
-    user: result.user,
-    token: result.token,
-  };
-};
+import Users from "./collections/Users";
+import collections from "./collections";
 
 export default buildConfig({
   admin: {
@@ -29,8 +15,7 @@ export default buildConfig({
     bundler: webpackBundler(),
   },
   editor: slateEditor({}),
-  collections: [Users, Tags],
-  csrf: ["http://localhost:3000"],
+  collections,
   typescript: {
     outputFile: path.resolve(__dirname, "payload-types.ts"),
   },

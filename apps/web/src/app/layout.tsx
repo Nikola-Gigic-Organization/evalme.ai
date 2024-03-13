@@ -1,9 +1,12 @@
 import "./globals.css";
 import "@repo/ui/styles.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Titillium_Web } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const fontFamily = Titillium_Web({
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -17,7 +20,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={fontFamily.className}>{children}</body>
     </html>
   );
 }

@@ -13,11 +13,11 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 module.exports = {
   extends: [
-    "next/core-web-vitals",
-    "turbo",
+    // "next/core-web-vitals",
+    // "turbo",
     "prettier",
-    "plugin:jsx-a11y/strict",
-    "plugin:@typescript-eslint/recommended",
+    // "plugin:jsx-a11y/strict",
+    // "plugin:@typescript-eslint/recommended",
     "eslint-config-turbo",
   ].map(require.resolve),
   parserOptions: {

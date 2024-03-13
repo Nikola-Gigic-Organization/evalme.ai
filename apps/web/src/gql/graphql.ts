@@ -29,6 +29,7 @@ export type Access = {
   canAccessAdmin: Scalars['Boolean']['output'];
   payload_preferences?: Maybe<Payload_PreferencesAccess>;
   tags?: Maybe<TagsAccess>;
+  topics?: Maybe<TopicsAccess>;
   users?: Maybe<UsersAccess>;
 };
 
@@ -36,9 +37,11 @@ export type Mutation = {
   __typename?: 'Mutation';
   createPayloadPreference?: Maybe<PayloadPreference>;
   createTag?: Maybe<Tag>;
+  createTopic?: Maybe<Topic>;
   createUser?: Maybe<User>;
   deletePayloadPreference?: Maybe<PayloadPreference>;
   deleteTag?: Maybe<Tag>;
+  deleteTopic?: Maybe<Topic>;
   deleteUser?: Maybe<User>;
   forgotPasswordUser: Scalars['Boolean']['output'];
   loginUser?: Maybe<UsersLoginResult>;
@@ -48,6 +51,7 @@ export type Mutation = {
   unlockUser: Scalars['Boolean']['output'];
   updatePayloadPreference?: Maybe<PayloadPreference>;
   updateTag?: Maybe<Tag>;
+  updateTopic?: Maybe<Topic>;
   updateUser?: Maybe<User>;
   verifyEmailUser?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -65,6 +69,12 @@ export type MutationCreateTagArgs = {
 };
 
 
+export type MutationCreateTopicArgs = {
+  data: MutationTopicInput;
+  draft?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationCreateUserArgs = {
   data: MutationUserInput;
   draft?: InputMaybe<Scalars['Boolean']['input']>;
@@ -77,6 +87,11 @@ export type MutationDeletePayloadPreferenceArgs = {
 
 
 export type MutationDeleteTagArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteTopicArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -126,6 +141,14 @@ export type MutationUpdatePayloadPreferenceArgs = {
 export type MutationUpdateTagArgs = {
   autosave?: InputMaybe<Scalars['Boolean']['input']>;
   data: MutationTagUpdateInput;
+  draft?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateTopicArgs = {
+  autosave?: InputMaybe<Scalars['Boolean']['input']>;
+  data: MutationTopicUpdateInput;
   draft?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['Int']['input'];
 };
@@ -646,10 +669,13 @@ export type Query = {
   PayloadPreferences?: Maybe<PayloadPreferences>;
   Tag?: Maybe<Tag>;
   Tags?: Maybe<Tags>;
+  Topic?: Maybe<Topic>;
+  Topics?: Maybe<Topics>;
   User?: Maybe<User>;
   Users?: Maybe<Users>;
   docAccessPayloadPreference?: Maybe<Payload_PreferencesDocAccess>;
   docAccessTag?: Maybe<TagsDocAccess>;
+  docAccessTopic?: Maybe<TopicsDocAccess>;
   docAccessUser?: Maybe<UsersDocAccess>;
   initializedUser?: Maybe<Scalars['Boolean']['output']>;
   meUser?: Maybe<UsersMe>;
@@ -686,6 +712,21 @@ export type QueryTagsArgs = {
 };
 
 
+export type QueryTopicArgs = {
+  draft?: InputMaybe<Scalars['Boolean']['input']>;
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryTopicsArgs = {
+  draft?: InputMaybe<Scalars['Boolean']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<Topic_Where>;
+};
+
+
 export type QueryUserArgs = {
   draft?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['Int']['input'];
@@ -707,6 +748,11 @@ export type QueryDocAccessPayloadPreferenceArgs = {
 
 
 export type QueryDocAccessTagArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryDocAccessTopicArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -1033,6 +1079,541 @@ export type TagsUpdateAccess = {
 
 export type TagsUpdateDocAccess = {
   __typename?: 'TagsUpdateDocAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type Topic = {
+  __typename?: 'Topic';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  slug: Scalars['String']['output'];
+  tags?: Maybe<Array<Tag>>;
+  title: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type Topic_CreatedAt_Operator = {
+  equals?: InputMaybe<Scalars['DateTime']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  greater_than?: InputMaybe<Scalars['DateTime']['input']>;
+  greater_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
+  less_than?: InputMaybe<Scalars['DateTime']['input']>;
+  less_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
+  like?: InputMaybe<Scalars['DateTime']['input']>;
+  not_equals?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type Topic_Description_Operator = {
+  contains?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  like?: InputMaybe<Scalars['String']['input']>;
+  not_equals?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Topic_Id_Operator = {
+  equals?: InputMaybe<Scalars['Int']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  greater_than?: InputMaybe<Scalars['Int']['input']>;
+  greater_than_equal?: InputMaybe<Scalars['Int']['input']>;
+  less_than?: InputMaybe<Scalars['Int']['input']>;
+  less_than_equal?: InputMaybe<Scalars['Int']['input']>;
+  not_equals?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Topic_Slug_Operator = {
+  all?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  contains?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  like?: InputMaybe<Scalars['String']['input']>;
+  not_equals?: InputMaybe<Scalars['String']['input']>;
+  not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Topic_Tags_Operator = {
+  all?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
+  equals?: InputMaybe<Scalars['JSON']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
+  not_equals?: InputMaybe<Scalars['JSON']['input']>;
+  not_in?: InputMaybe<Array<InputMaybe<Scalars['JSON']['input']>>>;
+};
+
+export type Topic_Title_Operator = {
+  all?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  contains?: InputMaybe<Scalars['String']['input']>;
+  equals?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  like?: InputMaybe<Scalars['String']['input']>;
+  not_equals?: InputMaybe<Scalars['String']['input']>;
+  not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Topic_UpdatedAt_Operator = {
+  equals?: InputMaybe<Scalars['DateTime']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  greater_than?: InputMaybe<Scalars['DateTime']['input']>;
+  greater_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
+  less_than?: InputMaybe<Scalars['DateTime']['input']>;
+  less_than_equal?: InputMaybe<Scalars['DateTime']['input']>;
+  like?: InputMaybe<Scalars['DateTime']['input']>;
+  not_equals?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type Topic_Where = {
+  AND?: InputMaybe<Array<InputMaybe<Topic_Where_And>>>;
+  OR?: InputMaybe<Array<InputMaybe<Topic_Where_Or>>>;
+  createdAt?: InputMaybe<Topic_CreatedAt_Operator>;
+  description?: InputMaybe<Topic_Description_Operator>;
+  id?: InputMaybe<Topic_Id_Operator>;
+  slug?: InputMaybe<Topic_Slug_Operator>;
+  tags?: InputMaybe<Topic_Tags_Operator>;
+  title?: InputMaybe<Topic_Title_Operator>;
+  updatedAt?: InputMaybe<Topic_UpdatedAt_Operator>;
+};
+
+export type Topic_Where_And = {
+  AND?: InputMaybe<Array<InputMaybe<Topic_Where_And>>>;
+  OR?: InputMaybe<Array<InputMaybe<Topic_Where_Or>>>;
+  createdAt?: InputMaybe<Topic_CreatedAt_Operator>;
+  description?: InputMaybe<Topic_Description_Operator>;
+  id?: InputMaybe<Topic_Id_Operator>;
+  slug?: InputMaybe<Topic_Slug_Operator>;
+  tags?: InputMaybe<Topic_Tags_Operator>;
+  title?: InputMaybe<Topic_Title_Operator>;
+  updatedAt?: InputMaybe<Topic_UpdatedAt_Operator>;
+};
+
+export type Topic_Where_Or = {
+  AND?: InputMaybe<Array<InputMaybe<Topic_Where_And>>>;
+  OR?: InputMaybe<Array<InputMaybe<Topic_Where_Or>>>;
+  createdAt?: InputMaybe<Topic_CreatedAt_Operator>;
+  description?: InputMaybe<Topic_Description_Operator>;
+  id?: InputMaybe<Topic_Id_Operator>;
+  slug?: InputMaybe<Topic_Slug_Operator>;
+  tags?: InputMaybe<Topic_Tags_Operator>;
+  title?: InputMaybe<Topic_Title_Operator>;
+  updatedAt?: InputMaybe<Topic_UpdatedAt_Operator>;
+};
+
+export type Topics = {
+  __typename?: 'Topics';
+  docs?: Maybe<Array<Maybe<Topic>>>;
+  hasNextPage?: Maybe<Scalars['Boolean']['output']>;
+  hasPrevPage?: Maybe<Scalars['Boolean']['output']>;
+  limit?: Maybe<Scalars['Int']['output']>;
+  nextPage?: Maybe<Scalars['Int']['output']>;
+  offset?: Maybe<Scalars['Int']['output']>;
+  page?: Maybe<Scalars['Int']['output']>;
+  pagingCounter?: Maybe<Scalars['Int']['output']>;
+  prevPage?: Maybe<Scalars['Int']['output']>;
+  totalDocs?: Maybe<Scalars['Int']['output']>;
+  totalPages?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TopicsCreateAccess = {
+  __typename?: 'TopicsCreateAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type TopicsCreateDocAccess = {
+  __typename?: 'TopicsCreateDocAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type TopicsDeleteAccess = {
+  __typename?: 'TopicsDeleteAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type TopicsDeleteDocAccess = {
+  __typename?: 'TopicsDeleteDocAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type TopicsDocAccessFields = {
+  __typename?: 'TopicsDocAccessFields';
+  createdAt?: Maybe<TopicsDocAccessFields_CreatedAt>;
+  description?: Maybe<TopicsDocAccessFields_Description>;
+  slug?: Maybe<TopicsDocAccessFields_Slug>;
+  tags?: Maybe<TopicsDocAccessFields_Tags>;
+  title?: Maybe<TopicsDocAccessFields_Title>;
+  updatedAt?: Maybe<TopicsDocAccessFields_UpdatedAt>;
+};
+
+export type TopicsDocAccessFields_CreatedAt = {
+  __typename?: 'TopicsDocAccessFields_createdAt';
+  create?: Maybe<TopicsDocAccessFields_CreatedAt_Create>;
+  delete?: Maybe<TopicsDocAccessFields_CreatedAt_Delete>;
+  read?: Maybe<TopicsDocAccessFields_CreatedAt_Read>;
+  update?: Maybe<TopicsDocAccessFields_CreatedAt_Update>;
+};
+
+export type TopicsDocAccessFields_CreatedAt_Create = {
+  __typename?: 'TopicsDocAccessFields_createdAt_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_CreatedAt_Delete = {
+  __typename?: 'TopicsDocAccessFields_createdAt_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_CreatedAt_Read = {
+  __typename?: 'TopicsDocAccessFields_createdAt_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_CreatedAt_Update = {
+  __typename?: 'TopicsDocAccessFields_createdAt_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Description = {
+  __typename?: 'TopicsDocAccessFields_description';
+  create?: Maybe<TopicsDocAccessFields_Description_Create>;
+  delete?: Maybe<TopicsDocAccessFields_Description_Delete>;
+  read?: Maybe<TopicsDocAccessFields_Description_Read>;
+  update?: Maybe<TopicsDocAccessFields_Description_Update>;
+};
+
+export type TopicsDocAccessFields_Description_Create = {
+  __typename?: 'TopicsDocAccessFields_description_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Description_Delete = {
+  __typename?: 'TopicsDocAccessFields_description_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Description_Read = {
+  __typename?: 'TopicsDocAccessFields_description_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Description_Update = {
+  __typename?: 'TopicsDocAccessFields_description_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Slug = {
+  __typename?: 'TopicsDocAccessFields_slug';
+  create?: Maybe<TopicsDocAccessFields_Slug_Create>;
+  delete?: Maybe<TopicsDocAccessFields_Slug_Delete>;
+  read?: Maybe<TopicsDocAccessFields_Slug_Read>;
+  update?: Maybe<TopicsDocAccessFields_Slug_Update>;
+};
+
+export type TopicsDocAccessFields_Slug_Create = {
+  __typename?: 'TopicsDocAccessFields_slug_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Slug_Delete = {
+  __typename?: 'TopicsDocAccessFields_slug_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Slug_Read = {
+  __typename?: 'TopicsDocAccessFields_slug_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Slug_Update = {
+  __typename?: 'TopicsDocAccessFields_slug_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Tags = {
+  __typename?: 'TopicsDocAccessFields_tags';
+  create?: Maybe<TopicsDocAccessFields_Tags_Create>;
+  delete?: Maybe<TopicsDocAccessFields_Tags_Delete>;
+  read?: Maybe<TopicsDocAccessFields_Tags_Read>;
+  update?: Maybe<TopicsDocAccessFields_Tags_Update>;
+};
+
+export type TopicsDocAccessFields_Tags_Create = {
+  __typename?: 'TopicsDocAccessFields_tags_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Tags_Delete = {
+  __typename?: 'TopicsDocAccessFields_tags_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Tags_Read = {
+  __typename?: 'TopicsDocAccessFields_tags_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Tags_Update = {
+  __typename?: 'TopicsDocAccessFields_tags_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Title = {
+  __typename?: 'TopicsDocAccessFields_title';
+  create?: Maybe<TopicsDocAccessFields_Title_Create>;
+  delete?: Maybe<TopicsDocAccessFields_Title_Delete>;
+  read?: Maybe<TopicsDocAccessFields_Title_Read>;
+  update?: Maybe<TopicsDocAccessFields_Title_Update>;
+};
+
+export type TopicsDocAccessFields_Title_Create = {
+  __typename?: 'TopicsDocAccessFields_title_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Title_Delete = {
+  __typename?: 'TopicsDocAccessFields_title_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Title_Read = {
+  __typename?: 'TopicsDocAccessFields_title_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_Title_Update = {
+  __typename?: 'TopicsDocAccessFields_title_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_UpdatedAt = {
+  __typename?: 'TopicsDocAccessFields_updatedAt';
+  create?: Maybe<TopicsDocAccessFields_UpdatedAt_Create>;
+  delete?: Maybe<TopicsDocAccessFields_UpdatedAt_Delete>;
+  read?: Maybe<TopicsDocAccessFields_UpdatedAt_Read>;
+  update?: Maybe<TopicsDocAccessFields_UpdatedAt_Update>;
+};
+
+export type TopicsDocAccessFields_UpdatedAt_Create = {
+  __typename?: 'TopicsDocAccessFields_updatedAt_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_UpdatedAt_Delete = {
+  __typename?: 'TopicsDocAccessFields_updatedAt_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_UpdatedAt_Read = {
+  __typename?: 'TopicsDocAccessFields_updatedAt_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsDocAccessFields_UpdatedAt_Update = {
+  __typename?: 'TopicsDocAccessFields_updatedAt_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields = {
+  __typename?: 'TopicsFields';
+  createdAt?: Maybe<TopicsFields_CreatedAt>;
+  description?: Maybe<TopicsFields_Description>;
+  slug?: Maybe<TopicsFields_Slug>;
+  tags?: Maybe<TopicsFields_Tags>;
+  title?: Maybe<TopicsFields_Title>;
+  updatedAt?: Maybe<TopicsFields_UpdatedAt>;
+};
+
+export type TopicsFields_CreatedAt = {
+  __typename?: 'TopicsFields_createdAt';
+  create?: Maybe<TopicsFields_CreatedAt_Create>;
+  delete?: Maybe<TopicsFields_CreatedAt_Delete>;
+  read?: Maybe<TopicsFields_CreatedAt_Read>;
+  update?: Maybe<TopicsFields_CreatedAt_Update>;
+};
+
+export type TopicsFields_CreatedAt_Create = {
+  __typename?: 'TopicsFields_createdAt_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_CreatedAt_Delete = {
+  __typename?: 'TopicsFields_createdAt_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_CreatedAt_Read = {
+  __typename?: 'TopicsFields_createdAt_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_CreatedAt_Update = {
+  __typename?: 'TopicsFields_createdAt_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Description = {
+  __typename?: 'TopicsFields_description';
+  create?: Maybe<TopicsFields_Description_Create>;
+  delete?: Maybe<TopicsFields_Description_Delete>;
+  read?: Maybe<TopicsFields_Description_Read>;
+  update?: Maybe<TopicsFields_Description_Update>;
+};
+
+export type TopicsFields_Description_Create = {
+  __typename?: 'TopicsFields_description_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Description_Delete = {
+  __typename?: 'TopicsFields_description_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Description_Read = {
+  __typename?: 'TopicsFields_description_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Description_Update = {
+  __typename?: 'TopicsFields_description_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Slug = {
+  __typename?: 'TopicsFields_slug';
+  create?: Maybe<TopicsFields_Slug_Create>;
+  delete?: Maybe<TopicsFields_Slug_Delete>;
+  read?: Maybe<TopicsFields_Slug_Read>;
+  update?: Maybe<TopicsFields_Slug_Update>;
+};
+
+export type TopicsFields_Slug_Create = {
+  __typename?: 'TopicsFields_slug_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Slug_Delete = {
+  __typename?: 'TopicsFields_slug_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Slug_Read = {
+  __typename?: 'TopicsFields_slug_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Slug_Update = {
+  __typename?: 'TopicsFields_slug_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Tags = {
+  __typename?: 'TopicsFields_tags';
+  create?: Maybe<TopicsFields_Tags_Create>;
+  delete?: Maybe<TopicsFields_Tags_Delete>;
+  read?: Maybe<TopicsFields_Tags_Read>;
+  update?: Maybe<TopicsFields_Tags_Update>;
+};
+
+export type TopicsFields_Tags_Create = {
+  __typename?: 'TopicsFields_tags_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Tags_Delete = {
+  __typename?: 'TopicsFields_tags_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Tags_Read = {
+  __typename?: 'TopicsFields_tags_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Tags_Update = {
+  __typename?: 'TopicsFields_tags_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Title = {
+  __typename?: 'TopicsFields_title';
+  create?: Maybe<TopicsFields_Title_Create>;
+  delete?: Maybe<TopicsFields_Title_Delete>;
+  read?: Maybe<TopicsFields_Title_Read>;
+  update?: Maybe<TopicsFields_Title_Update>;
+};
+
+export type TopicsFields_Title_Create = {
+  __typename?: 'TopicsFields_title_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Title_Delete = {
+  __typename?: 'TopicsFields_title_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Title_Read = {
+  __typename?: 'TopicsFields_title_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_Title_Update = {
+  __typename?: 'TopicsFields_title_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_UpdatedAt = {
+  __typename?: 'TopicsFields_updatedAt';
+  create?: Maybe<TopicsFields_UpdatedAt_Create>;
+  delete?: Maybe<TopicsFields_UpdatedAt_Delete>;
+  read?: Maybe<TopicsFields_UpdatedAt_Read>;
+  update?: Maybe<TopicsFields_UpdatedAt_Update>;
+};
+
+export type TopicsFields_UpdatedAt_Create = {
+  __typename?: 'TopicsFields_updatedAt_Create';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_UpdatedAt_Delete = {
+  __typename?: 'TopicsFields_updatedAt_Delete';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_UpdatedAt_Read = {
+  __typename?: 'TopicsFields_updatedAt_Read';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsFields_UpdatedAt_Update = {
+  __typename?: 'TopicsFields_updatedAt_Update';
+  permission: Scalars['Boolean']['output'];
+};
+
+export type TopicsReadAccess = {
+  __typename?: 'TopicsReadAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type TopicsReadDocAccess = {
+  __typename?: 'TopicsReadDocAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type TopicsUpdateAccess = {
+  __typename?: 'TopicsUpdateAccess';
+  permission: Scalars['Boolean']['output'];
+  where?: Maybe<Scalars['JSONObject']['output']>;
+};
+
+export type TopicsUpdateDocAccess = {
+  __typename?: 'TopicsUpdateDocAccess';
   permission: Scalars['Boolean']['output'];
   where?: Maybe<Scalars['JSONObject']['output']>;
 };
@@ -1464,6 +2045,24 @@ export type MutationTagUpdateInput = {
   updatedAt?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type MutationTopicInput = {
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  slug: Scalars['String']['input'];
+  tags?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MutationTopicUpdateInput = {
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type MutationUserInput = {
   createdAt?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
@@ -1526,6 +2125,24 @@ export type TagsDocAccess = {
   update?: Maybe<TagsUpdateDocAccess>;
 };
 
+export type TopicsAccess = {
+  __typename?: 'topicsAccess';
+  create?: Maybe<TopicsCreateAccess>;
+  delete?: Maybe<TopicsDeleteAccess>;
+  fields?: Maybe<TopicsFields>;
+  read?: Maybe<TopicsReadAccess>;
+  update?: Maybe<TopicsUpdateAccess>;
+};
+
+export type TopicsDocAccess = {
+  __typename?: 'topicsDocAccess';
+  create?: Maybe<TopicsCreateDocAccess>;
+  delete?: Maybe<TopicsDeleteDocAccess>;
+  fields?: Maybe<TopicsDocAccessFields>;
+  read?: Maybe<TopicsReadDocAccess>;
+  update?: Maybe<TopicsUpdateDocAccess>;
+};
+
 export type UsersAccess = {
   __typename?: 'usersAccess';
   create?: Maybe<UsersCreateAccess>;
@@ -1580,22 +2197,10 @@ export type UsersResetPassword = {
   user?: Maybe<User>;
 };
 
-export type AllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllTopicsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllUsersQuery = { __typename?: 'Query', Users?: { __typename?: 'Users', docs?: Array<{ __typename?: 'User', id?: number | null, email: any } | null> | null } | null };
-
-export type AllTagsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type AllTagsQuery = { __typename?: 'Query', Tags?: { __typename?: 'Tags', docs?: Array<{ __typename?: 'Tag', id?: number | null, name: string } | null> | null } | null };
-
-export type GetTagQueryVariables = Exact<{
-  id: Scalars['Int']['input'];
-}>;
-
-
-export type GetTagQuery = { __typename?: 'Query', Tag?: { __typename?: 'Tag', id?: number | null, name: string } | null };
+export type GetAllTopicsQuery = { __typename?: 'Query', Topics?: { __typename?: 'Topics', docs?: Array<{ __typename?: 'Topic', id?: number | null, title: string, description?: string | null, tags?: Array<{ __typename?: 'Tag', id?: number | null, name: string }> | null } | null> | null } | null };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -1611,8 +2216,6 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutMutation = { __typename?: 'Mutation', logoutUser?: string | null };
 
 
-export const AllUsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allUsers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Users"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"docs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]} as unknown as DocumentNode<AllUsersQuery, AllUsersQueryVariables>;
-export const AllTagsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"allTags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"docs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<AllTagsQuery, AllTagsQueryVariables>;
-export const GetTagDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getTag"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Tag"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetTagQuery, GetTagQueryVariables>;
+export const GetAllTopicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllTopics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"Topics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"docs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetAllTopicsQuery, GetAllTopicsQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loginUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"exp"}},{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const LogoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"logoutUser"}}]}}]} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
