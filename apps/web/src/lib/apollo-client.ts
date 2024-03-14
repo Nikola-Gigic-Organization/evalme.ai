@@ -1,51 +1,69 @@
 import {
   ApolloClient,
-  createHttpLink,
   InMemoryCache,
-  FetchResult,
+  createHttpLink,
   NormalizedCacheObject,
+  ApolloQueryResult,
+  QueryOptions,
+  MutationOptions,
+  FetchResult,
+  OperationVariables,
 } from "@apollo/client";
 import { cookies } from "next/headers";
 
-const isBuild = process.env.NEXT_PUBLIC_BUILD_MODE;
-const token = isBuild ? "" : cookies().get("token")?.value;
+class ExtendedApolloClient {
+  private client: ApolloClient<NormalizedCacheObject>;
 
-const client = new ApolloClient({
-  ssrMode: true,
-  link: createHttpLink({
-    uri: "http://127.0.0.1:3001/api/graphql",
-    credentials: "same-origin",
-    headers: {
-      Authorization: `JWT ${token}`,
-    },
-  }),
-  cache: new InMemoryCache(),
-});
-
-const customQuery: typeof client.query = async (options): Promise<any> => {
-  try {
-    const data = await client.query(options);
-
-    return data;
-  } catch (error: any) {
-    return error;
+  constructor(token: string) {
+    this.client = new ApolloClient({
+      ssrMode: true,
+      link: createHttpLink({
+        uri: "http://127.0.0.1:3001/api/graphql",
+        credentials: "same-origin",
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      }),
+      cache: new InMemoryCache(),
+    });
   }
-};
-const customMutate: typeof client.mutate = async (
-  options,
-): Promise<FetchResult<any>> => {
-  try {
-    const data = await client.mutate(options);
 
-    return data;
-  } catch (error: any) {
-    return error;
+  // Example of a custom query method using composition
+  async query<
+    T = any,
+    TVariables extends OperationVariables = Record<string, any>,
+  >(options: QueryOptions<TVariables, T>): Promise<ApolloQueryResult<T>> {
+    try {
+      return await this.client.query<T, TVariables>(options);
+    } catch (error: any) {
+      if (error.networkError.cause.code === "ECONNREFUSED") return error;
+
+      console.error("Custom error handling: ", error);
+      throw error; // You can also choose to handle errors differently here
+    }
   }
-};
 
-class CustomClient {
-  query = customQuery;
-  mutate = customMutate;
+  // Example of a custom mutate method using composition
+  async mutate<
+    TData = any,
+    TVariables extends OperationVariables = Record<string, any>,
+  >(options: MutationOptions<TData, TVariables>): Promise<FetchResult<TData>> {
+    try {
+      return await this.client.mutate<TData, TVariables>(options);
+    } catch (error: any) {
+      if (error.networkError.cause.code === "ECONNREFUSED") return error;
+
+      console.error("Custom error handling: ", error);
+      throw error; // You can also choose to handle errors differently here
+    }
+  }
+
+  // You can add more custom methods or properties as needed
 }
 
-export default new CustomClient() as ApolloClient<NormalizedCacheObject>;
+// Usage
+const isBuild = process.env.NEXT_PUBLIC_BUILD_MODE;
+const token = isBuild ? "" : cookies().get("token")?.value;
+const extendedClient = new ExtendedApolloClient(token ?? "");
+
+export default extendedClient;
