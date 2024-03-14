@@ -2,6 +2,7 @@ query getAllTopics {
   Topics {
     docs {
       id
+      slug
       title
       description
       tags {

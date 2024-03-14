@@ -9,7 +9,7 @@ export default async function Page(): Promise<JSX.Element> {
 
   return (
     <div className="flex justify-center">
-      <TopicsForm topics={data.Topics?.docs} />
+      <TopicsForm topics={data?.Topics?.docs} />
     </div>
   );
 }

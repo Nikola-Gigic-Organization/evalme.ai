@@ -7,6 +7,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
+    "web#build": {
+      "dependsOn": ["^cms#build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
     "lint": {},
     "type-check": {},
     "dev": {
