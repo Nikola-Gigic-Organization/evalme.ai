@@ -25,6 +25,40 @@ const Topics: CollectionConfig = {
       type: "textarea",
     },
     {
+      name: "questions",
+      label: "Questions",
+      type: "array",
+      fields: [
+        {
+          name: "text",
+          label: "Question Text",
+          type: "textarea",
+        },
+      ],
+    },
+    {
+      name: "questionsCount",
+      label: "Questions Count",
+      type: "number",
+      admin: {
+        readOnly: true,
+      },
+      hooks: {
+        afterRead: [
+          async ({ data }) => {
+            return data?.questions?.length ?? 0;
+          },
+        ],
+      },
+    },
+    {
+      name: "order",
+      label: "Order",
+      type: "number",
+      required: true,
+      defaultValue: 1,
+    },
+    {
       name: "tags",
       label: "Tags",
       type: "relationship",

@@ -30,6 +30,7 @@ export const loginAction = async (
       cookies().set("token", data?.loginUser?.token, {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
+        httpOnly: true,
       });
 
       return { error: "" };

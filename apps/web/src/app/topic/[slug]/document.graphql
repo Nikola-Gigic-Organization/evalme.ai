@@ -1,0 +1,13 @@
+query getTopicBySlug($slug: String!) {
+  Topics(where: { slug: { equals: $slug } }) {
+    docs {
+      id
+      title
+      questions {
+        id
+        text
+      }
+      questionsCount
+    }
+  }
+}

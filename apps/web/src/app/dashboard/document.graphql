@@ -5,6 +5,10 @@ query getAllTopics {
       slug
       title
       description
+      questions {
+        id
+        text
+      }
       tags {
         id
         name
