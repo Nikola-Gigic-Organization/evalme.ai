@@ -10,8 +10,6 @@ export type LoginData = {
   password: string;
 };
 
-export type LoginFormData = LoginData & FormData;
-
 export const loginAction = async (
   loginData: LoginData,
 ): Promise<{ error: string }> => {
@@ -30,7 +28,6 @@ export const loginAction = async (
       cookies().set("token", data?.loginUser?.token, {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
-        httpOnly: true,
       });
 
       return { error: "" };

@@ -31,7 +31,7 @@ const TopicCard: React.FC<TopicCardProps> = ({
           ))}
         </div>
       </div>
-      <div className="absolute right-0 top-0 z-10 h-full w-full origin-top-right bg-black transition-all duration-300 group-hover:right-1 group-hover:top-1" />
+      <div className="absolute right-0 top-0 z-10 h-full w-full origin-top-right bg-black transition-all duration-300 group-hover:right-2 group-hover:top-2" />
     </Link>
   );
 };

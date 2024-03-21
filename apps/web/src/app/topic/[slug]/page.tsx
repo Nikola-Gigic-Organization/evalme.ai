@@ -1,5 +1,6 @@
 import { GetTopicBySlugDocument } from "@/gql/graphql";
 import { apolloClient } from "@/lib";
+import { QuestionForm } from "./components";
 
 interface PageProps {
   params: {
@@ -17,12 +18,11 @@ export default async function Page({
       slug,
     },
   });
-
-  const topic = data.Topics?.docs?.at(0);
+  const topic = data?.Topics?.docs?.at(0);
 
   return (
-    <div>
-      <h1>Topic: {topic?.title}</h1>
+    <div className="flex h-screen w-full items-center justify-center p-4">
+      <QuestionForm topic={topic} />
     </div>
   );
 }
