@@ -26,7 +26,7 @@ export const loginAction = async (
 
     if (data?.loginUser?.token) {
       cookies().set("token", data?.loginUser?.token, {
-        maxAge: 30 * 24 * 60 * 60,
+        maxAge: 60 * 60 * 24 * 7, // 7 days
         path: "/",
       });
 
