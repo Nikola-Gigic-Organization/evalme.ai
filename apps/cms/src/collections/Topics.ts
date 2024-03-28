@@ -30,9 +30,10 @@ const Topics: CollectionConfig = {
       type: "array",
       fields: [
         {
-          name: "text",
+          name: "question",
           label: "Question Text",
-          type: "textarea",
+          type: "relationship",
+          relationTo: "topicQuestion",
         },
       ],
     },

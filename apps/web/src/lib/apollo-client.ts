@@ -22,6 +22,11 @@ class ExtendedApolloClient {
         credentials: "same-origin",
       }),
       cache: new InMemoryCache(),
+      defaultOptions: {
+        query: {
+          fetchPolicy: "network-only",
+        },
+      },
     });
   }
 

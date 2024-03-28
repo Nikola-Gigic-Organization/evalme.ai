@@ -10,6 +10,9 @@ type Query {
   Topic(id: Int!, draft: Boolean): Topic
   Topics(draft: Boolean, where: Topic_where, limit: Int, page: Int, sort: String): Topics
   docAccessTopic(id: Int!): topicsDocAccess
+  TopicQuestion(id: Int!, draft: Boolean): TopicQuestion
+  TopicQuestions(draft: Boolean, where: TopicQuestion_where, limit: Int, page: Int, sort: String): TopicQuestions
+  docAccessTopicQuestion(id: Int!): topicQuestionDocAccess
   PayloadPreference(id: Int!, draft: Boolean): PayloadPreference
   PayloadPreferences(draft: Boolean, where: PayloadPreference_where, limit: Int, page: Int, sort: String): PayloadPreferences
   docAccessPayloadPreference(id: Int!): payload_preferencesDocAccess
@@ -475,8 +478,16 @@ type Topic {
 }
 
 type Topic_Questions {
-  text: String
+  question: TopicQuestion
   id: String
+}
+
+type TopicQuestion {
+  id: Int
+  text: String!
+  order: Float!
+  updatedAt: DateTime
+  createdAt: DateTime
 }
 
 type Topics {
@@ -497,7 +508,7 @@ input Topic_where {
   slug: Topic_slug_operator
   title: Topic_title_operator
   description: Topic_description_operator
-  questions__text: Topic_questions__text_operator
+  questions__question: Topic_questions__question_operator
   questions__id: Topic_questions__id_operator
   questionsCount: Topic_questionsCount_operator
   order: Topic_order_operator
@@ -537,13 +548,19 @@ input Topic_description_operator {
   exists: Boolean
 }
 
-input Topic_questions__text_operator {
-  equals: String
-  not_equals: String
-  like: String
-  contains: String
+input Topic_questions__question_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
   exists: Boolean
 }
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
 
 input Topic_questions__id_operator {
   equals: String
@@ -584,11 +601,6 @@ input Topic_tags_operator {
   exists: Boolean
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
 input Topic_updatedAt_operator {
   equals: DateTime
   not_equals: DateTime
@@ -625,7 +637,7 @@ input Topic_where_and {
   slug: Topic_slug_operator
   title: Topic_title_operator
   description: Topic_description_operator
-  questions__text: Topic_questions__text_operator
+  questions__question: Topic_questions__question_operator
   questions__id: Topic_questions__id_operator
   questionsCount: Topic_questionsCount_operator
   order: Topic_order_operator
@@ -641,7 +653,7 @@ input Topic_where_or {
   slug: Topic_slug_operator
   title: Topic_title_operator
   description: Topic_description_operator
-  questions__text: Topic_questions__text_operator
+  questions__question: Topic_questions__question_operator
   questions__id: Topic_questions__id_operator
   questionsCount: Topic_questionsCount_operator
   order: Topic_order_operator
@@ -767,30 +779,30 @@ type TopicsDocAccessFields_questions_Delete {
 }
 
 type TopicsDocAccessFields_questions_Fields {
-  text: TopicsDocAccessFields_questions_text
+  question: TopicsDocAccessFields_questions_question
   id: TopicsDocAccessFields_questions_id
 }
 
-type TopicsDocAccessFields_questions_text {
-  create: TopicsDocAccessFields_questions_text_Create
-  read: TopicsDocAccessFields_questions_text_Read
-  update: TopicsDocAccessFields_questions_text_Update
-  delete: TopicsDocAccessFields_questions_text_Delete
+type TopicsDocAccessFields_questions_question {
+  create: TopicsDocAccessFields_questions_question_Create
+  read: TopicsDocAccessFields_questions_question_Read
+  update: TopicsDocAccessFields_questions_question_Update
+  delete: TopicsDocAccessFields_questions_question_Delete
 }
 
-type TopicsDocAccessFields_questions_text_Create {
+type TopicsDocAccessFields_questions_question_Create {
   permission: Boolean!
 }
 
-type TopicsDocAccessFields_questions_text_Read {
+type TopicsDocAccessFields_questions_question_Read {
   permission: Boolean!
 }
 
-type TopicsDocAccessFields_questions_text_Update {
+type TopicsDocAccessFields_questions_question_Update {
   permission: Boolean!
 }
 
-type TopicsDocAccessFields_questions_text_Delete {
+type TopicsDocAccessFields_questions_question_Delete {
   permission: Boolean!
 }
 
@@ -948,6 +960,225 @@ type TopicsUpdateDocAccess {
 }
 
 type TopicsDeleteDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicQuestions {
+  docs: [TopicQuestion]
+  hasNextPage: Boolean
+  hasPrevPage: Boolean
+  limit: Int
+  nextPage: Int
+  offset: Int
+  page: Int
+  pagingCounter: Int
+  prevPage: Int
+  totalDocs: Int
+  totalPages: Int
+}
+
+input TopicQuestion_where {
+  text: TopicQuestion_text_operator
+  order: TopicQuestion_order_operator
+  updatedAt: TopicQuestion_updatedAt_operator
+  createdAt: TopicQuestion_createdAt_operator
+  id: TopicQuestion_id_operator
+  AND: [TopicQuestion_where_and]
+  OR: [TopicQuestion_where_or]
+}
+
+input TopicQuestion_text_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+}
+
+input TopicQuestion_order_operator {
+  equals: Float
+  not_equals: Float
+  greater_than_equal: Float
+  greater_than: Float
+  less_than_equal: Float
+  less_than: Float
+}
+
+input TopicQuestion_updatedAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input TopicQuestion_createdAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input TopicQuestion_id_operator {
+  equals: Int
+  not_equals: Int
+  greater_than_equal: Int
+  greater_than: Int
+  less_than_equal: Int
+  less_than: Int
+  exists: Boolean
+}
+
+input TopicQuestion_where_and {
+  text: TopicQuestion_text_operator
+  order: TopicQuestion_order_operator
+  updatedAt: TopicQuestion_updatedAt_operator
+  createdAt: TopicQuestion_createdAt_operator
+  id: TopicQuestion_id_operator
+  AND: [TopicQuestion_where_and]
+  OR: [TopicQuestion_where_or]
+}
+
+input TopicQuestion_where_or {
+  text: TopicQuestion_text_operator
+  order: TopicQuestion_order_operator
+  updatedAt: TopicQuestion_updatedAt_operator
+  createdAt: TopicQuestion_createdAt_operator
+  id: TopicQuestion_id_operator
+  AND: [TopicQuestion_where_and]
+  OR: [TopicQuestion_where_or]
+}
+
+type topicQuestionDocAccess {
+  fields: TopicQuestionDocAccessFields
+  create: TopicQuestionCreateDocAccess
+  read: TopicQuestionReadDocAccess
+  update: TopicQuestionUpdateDocAccess
+  delete: TopicQuestionDeleteDocAccess
+}
+
+type TopicQuestionDocAccessFields {
+  text: TopicQuestionDocAccessFields_text
+  order: TopicQuestionDocAccessFields_order
+  updatedAt: TopicQuestionDocAccessFields_updatedAt
+  createdAt: TopicQuestionDocAccessFields_createdAt
+}
+
+type TopicQuestionDocAccessFields_text {
+  create: TopicQuestionDocAccessFields_text_Create
+  read: TopicQuestionDocAccessFields_text_Read
+  update: TopicQuestionDocAccessFields_text_Update
+  delete: TopicQuestionDocAccessFields_text_Delete
+}
+
+type TopicQuestionDocAccessFields_text_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_text_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_text_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_text_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_order {
+  create: TopicQuestionDocAccessFields_order_Create
+  read: TopicQuestionDocAccessFields_order_Read
+  update: TopicQuestionDocAccessFields_order_Update
+  delete: TopicQuestionDocAccessFields_order_Delete
+}
+
+type TopicQuestionDocAccessFields_order_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_order_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_order_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_order_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_updatedAt {
+  create: TopicQuestionDocAccessFields_updatedAt_Create
+  read: TopicQuestionDocAccessFields_updatedAt_Read
+  update: TopicQuestionDocAccessFields_updatedAt_Update
+  delete: TopicQuestionDocAccessFields_updatedAt_Delete
+}
+
+type TopicQuestionDocAccessFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_createdAt {
+  create: TopicQuestionDocAccessFields_createdAt_Create
+  read: TopicQuestionDocAccessFields_createdAt_Read
+  update: TopicQuestionDocAccessFields_createdAt_Update
+  delete: TopicQuestionDocAccessFields_createdAt_Delete
+}
+
+type TopicQuestionDocAccessFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionDocAccessFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionCreateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicQuestionReadDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicQuestionUpdateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicQuestionDeleteDocAccess {
   permission: Boolean!
   where: JSONObject
 }
@@ -1237,6 +1468,7 @@ type Access {
   users: usersAccess
   tags: tagsAccess
   topics: topicsAccess
+  topicQuestion: topicQuestionAccess
   payload_preferences: payload_preferencesAccess
 }
 
@@ -1590,30 +1822,30 @@ type TopicsFields_questions_Delete {
 }
 
 type TopicsFields_questions_Fields {
-  text: TopicsFields_questions_text
+  question: TopicsFields_questions_question
   id: TopicsFields_questions_id
 }
 
-type TopicsFields_questions_text {
-  create: TopicsFields_questions_text_Create
-  read: TopicsFields_questions_text_Read
-  update: TopicsFields_questions_text_Update
-  delete: TopicsFields_questions_text_Delete
+type TopicsFields_questions_question {
+  create: TopicsFields_questions_question_Create
+  read: TopicsFields_questions_question_Read
+  update: TopicsFields_questions_question_Update
+  delete: TopicsFields_questions_question_Delete
 }
 
-type TopicsFields_questions_text_Create {
+type TopicsFields_questions_question_Create {
   permission: Boolean!
 }
 
-type TopicsFields_questions_text_Read {
+type TopicsFields_questions_question_Read {
   permission: Boolean!
 }
 
-type TopicsFields_questions_text_Update {
+type TopicsFields_questions_question_Update {
   permission: Boolean!
 }
 
-type TopicsFields_questions_text_Delete {
+type TopicsFields_questions_question_Delete {
   permission: Boolean!
 }
 
@@ -1771,6 +2003,133 @@ type TopicsUpdateAccess {
 }
 
 type TopicsDeleteAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type topicQuestionAccess {
+  fields: TopicQuestionFields
+  create: TopicQuestionCreateAccess
+  read: TopicQuestionReadAccess
+  update: TopicQuestionUpdateAccess
+  delete: TopicQuestionDeleteAccess
+}
+
+type TopicQuestionFields {
+  text: TopicQuestionFields_text
+  order: TopicQuestionFields_order
+  updatedAt: TopicQuestionFields_updatedAt
+  createdAt: TopicQuestionFields_createdAt
+}
+
+type TopicQuestionFields_text {
+  create: TopicQuestionFields_text_Create
+  read: TopicQuestionFields_text_Read
+  update: TopicQuestionFields_text_Update
+  delete: TopicQuestionFields_text_Delete
+}
+
+type TopicQuestionFields_text_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_text_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_text_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_text_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_order {
+  create: TopicQuestionFields_order_Create
+  read: TopicQuestionFields_order_Read
+  update: TopicQuestionFields_order_Update
+  delete: TopicQuestionFields_order_Delete
+}
+
+type TopicQuestionFields_order_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_order_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_order_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_order_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_updatedAt {
+  create: TopicQuestionFields_updatedAt_Create
+  read: TopicQuestionFields_updatedAt_Read
+  update: TopicQuestionFields_updatedAt_Update
+  delete: TopicQuestionFields_updatedAt_Delete
+}
+
+type TopicQuestionFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_createdAt {
+  create: TopicQuestionFields_createdAt_Create
+  read: TopicQuestionFields_createdAt_Read
+  update: TopicQuestionFields_createdAt_Update
+  delete: TopicQuestionFields_createdAt_Delete
+}
+
+type TopicQuestionFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type TopicQuestionFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type TopicQuestionCreateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicQuestionReadAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicQuestionUpdateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type TopicQuestionDeleteAccess {
   permission: Boolean!
   where: JSONObject
 }
@@ -1943,6 +2302,9 @@ type Mutation {
   createTopic(data: mutationTopicInput!, draft: Boolean): Topic
   updateTopic(id: Int!, autosave: Boolean, data: mutationTopicUpdateInput!, draft: Boolean): Topic
   deleteTopic(id: Int!): Topic
+  createTopicQuestion(data: mutationTopicQuestionInput!, draft: Boolean): TopicQuestion
+  updateTopicQuestion(id: Int!, autosave: Boolean, data: mutationTopicQuestionUpdateInput!, draft: Boolean): TopicQuestion
+  deleteTopicQuestion(id: Int!): TopicQuestion
   createPayloadPreference(data: mutationPayloadPreferenceInput!, draft: Boolean): PayloadPreference
   updatePayloadPreference(id: Int!, autosave: Boolean, data: mutationPayloadPreferenceUpdateInput!, draft: Boolean): PayloadPreference
   deletePayloadPreference(id: Int!): PayloadPreference
@@ -2021,7 +2383,7 @@ input mutationTopicInput {
 }
 
 input mutationTopic_QuestionsInput {
-  text: String
+  question: Int
   id: String
 }
 
@@ -2038,8 +2400,22 @@ input mutationTopicUpdateInput {
 }
 
 input mutationTopicUpdate_QuestionsInput {
-  text: String
+  question: Int
   id: String
+}
+
+input mutationTopicQuestionInput {
+  text: String!
+  order: Float!
+  updatedAt: String
+  createdAt: String
+}
+
+input mutationTopicQuestionUpdateInput {
+  text: String
+  order: Float
+  updatedAt: String
+  createdAt: String
 }
 
 input mutationPayloadPreferenceInput {

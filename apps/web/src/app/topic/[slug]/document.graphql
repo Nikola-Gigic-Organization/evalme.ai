@@ -5,7 +5,10 @@ query getTopicBySlug($slug: String!) {
       title
       questions {
         id
-        text
+        question {
+          id
+          text
+        }
       }
       questionsCount
     }

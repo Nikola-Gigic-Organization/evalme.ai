@@ -9,7 +9,7 @@ import { submitQuestion } from "../actions";
 import { QuestionForm } from "../types";
 
 interface QuestionFormProps {
-  topic?: Partial<Topic> | null;
+  topic?: DeepPartial<Topic> | null;
 }
 
 const QuestionForm: FC<QuestionFormProps> = ({ topic }) => {
@@ -47,7 +47,9 @@ const QuestionForm: FC<QuestionFormProps> = ({ topic }) => {
     <div className="w-sm flex flex-col space-y-8">
       <div className="relative aspect-square w-full">
         <div className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col flex-col justify-between space-y-2 border border-black bg-white p-4">
-          <p className="text-lg font-medium">{topicActiveQuestion?.text}</p>
+          <p className="text-lg font-medium">
+            {topicActiveQuestion?.question?.text}
+          </p>
           <form className="flex w-full flex-col space-y-2" action={onSubmit}>
             <textarea
               {...register("answer")}
