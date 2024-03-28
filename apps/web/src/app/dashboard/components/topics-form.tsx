@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 import TopicCard from "./topic-card";
 
-const TopicsForm: React.FC<{ topics?: Partial<Topic | null>[] | null }> = ({
+const TopicsForm: React.FC<{ topics?: DeepPartial<Topic | null>[] | null }> = ({
   topics,
 }) => {
   const [search, setSearch] = React.useState("");
@@ -56,7 +56,7 @@ const TopicsForm: React.FC<{ topics?: Partial<Topic | null>[] | null }> = ({
             slug={topic?.slug}
             title={topic?.title}
             description={topic?.description}
-            tags={topic?.tags?.map((tag) => tag.name)}
+            tags={topic?.tags?.map((tag) => tag?.name ?? "")}
           />
         ))}
       </div>

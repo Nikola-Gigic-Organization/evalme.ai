@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const MIN_ANSWER_LENGTH = 2;
 
-export type QuestionForm = {
+export type QuestionFormProps = {
   answer: string;
 };
 

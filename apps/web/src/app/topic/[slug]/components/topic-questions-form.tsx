@@ -6,16 +6,16 @@ import clsx from "clsx";
 import { Topic } from "@/gql/graphql";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { submitQuestion } from "../actions";
-import { QuestionForm } from "../types";
+import { QuestionFormProps } from "../types";
 
-interface QuestionFormProps {
+interface QuestionsFormProps {
   topic?: DeepPartial<Topic> | null;
 }
 
-const QuestionForm: FC<QuestionFormProps> = ({ topic }) => {
+const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const { register, reset } = useForm<QuestionForm>({
+  const { register, reset } = useForm<QuestionFormProps>({
     defaultValues: {
       answer: "",
     },
@@ -125,4 +125,4 @@ const QuestionForm: FC<QuestionFormProps> = ({ topic }) => {
   );
 };
 
-export default QuestionForm;
+export default QuestionsForm;
