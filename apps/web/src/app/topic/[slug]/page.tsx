@@ -21,7 +21,7 @@ export default async function Page({
   const topic = data?.Topics?.docs?.at(0);
 
   return (
-    <div className="flex h-screen w-full items-center justify-center p-4">
+    <div className="flex h-screen w-full justify-center px-4 pt-20">
       <QuestionForm topic={topic} />
     </div>
   );

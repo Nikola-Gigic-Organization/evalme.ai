@@ -1,9 +1,9 @@
 import { z, ZodSchema } from "zod";
 
-const formDataResolver = async <T extends ZodSchema>(
+const formDataResolver = <T extends ZodSchema>(
   formData: FormData,
   schema: T,
-): Promise<(z.infer<T> & { errors: Array<{ message: string }> }) | null> => {
+): (z.infer<T> & { errors: Array<{ message: string }> }) | null => {
   const data = Object.fromEntries(formData.entries());
 
   try {
