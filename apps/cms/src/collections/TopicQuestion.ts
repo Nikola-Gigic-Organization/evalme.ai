@@ -7,10 +7,26 @@ const TopicQuestion: CollectionConfig = {
   },
   fields: [
     {
+      name: "topic",
+      label: "Topic",
+      type: "relationship",
+      relationTo: "topics",
+      required: true,
+      hasMany: false,
+    },
+    {
+      name: "title",
+      label: "Question Title",
+      type: "text",
+      required: true,
+      defaultValue: "Untitled Question",
+    },
+    {
       name: "text",
       label: "Question Text",
       type: "textarea",
       required: true,
+      defaultValue: "This is a question",
     },
     {
       name: "order",

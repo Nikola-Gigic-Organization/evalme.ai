@@ -41,7 +41,6 @@ const mockAnswerFetch = async ({
 export const submitQuestion = async (
   formData: FormData,
 ): Promise<{ interviewAnswer: string; errors: Array<{ message: string }> }> => {
-  console.log("formData", formData);
   const data = formDataResolver(formData, questionFormSchema);
 
   const errors = data?.errors || [];
@@ -49,8 +48,6 @@ export const submitQuestion = async (
   const interviewAnswer = await mockAnswerFetch({
     answerIndex: Number(data?.answerId!),
   });
-
-  console.log("answerIndex", Number(data?.answerId!));
 
   return {
     interviewAnswer,

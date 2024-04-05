@@ -66,7 +66,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
             .otherwise(() => (
               <>
                 <p className="text-lg font-medium">
-                  {topicActiveQuestion?.question?.text}
+                  {topicActiveQuestion?.text}
                 </p>
                 <div className="flex w-full flex-col space-y-2">
                   <textarea

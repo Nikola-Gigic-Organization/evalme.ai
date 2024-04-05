@@ -1,3 +1,4 @@
+import payload from "payload";
 import { CollectionConfig } from "payload/types";
 
 const Topics: CollectionConfig = {
@@ -27,15 +28,16 @@ const Topics: CollectionConfig = {
     {
       name: "questions",
       label: "Questions",
-      type: "array",
-      fields: [
-        {
-          name: "question",
-          label: "Question Text",
-          type: "relationship",
-          relationTo: "topicQuestion",
-        },
-      ],
+      type: "relationship",
+      relationTo: "topicQuestion",
+      hasMany: true,
+      filterOptions: async ({ data, id }) => {
+        return {
+          topic: {
+            equals: id,
+          },
+        };
+      },
     },
     {
       name: "questionsCount",

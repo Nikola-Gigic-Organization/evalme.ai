@@ -7,10 +7,8 @@ query getAllTopics {
       description
       questions {
         id
-        question {
-          id
-          text
-        }
+        title
+        text
       }
       tags {
         id
