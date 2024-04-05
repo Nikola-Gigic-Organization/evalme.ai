@@ -65,9 +65,14 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
             .with(true, () => <InterviewAnswer answer={activeAnswer} />)
             .otherwise(() => (
               <>
-                <p className="text-lg font-medium">
-                  {topicActiveQuestion?.text}
-                </p>
+                <div className="space-y-2">
+                  <h2 className="text-xl font-bold">
+                    {topicActiveQuestion?.title}
+                  </h2>
+                  <p className="text-lg font-medium">
+                    {topicActiveQuestion?.text}
+                  </p>
+                </div>
                 <div className="flex w-full flex-col space-y-2">
                   <textarea
                     {...register("answer")}
