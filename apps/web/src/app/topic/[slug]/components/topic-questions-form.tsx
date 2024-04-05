@@ -65,7 +65,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
             .with(true, () => <InterviewAnswer answer={activeAnswer} />)
             .otherwise(() => (
               <>
-                <div className="space-y-2">
+                <div>
                   <h2 className="text-xl font-bold">
                     {topicActiveQuestion?.title}
                   </h2>
