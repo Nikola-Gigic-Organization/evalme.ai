@@ -2,7 +2,7 @@ import payload from "payload";
 import path from "path";
 import dotenv from "dotenv";
 
-import { Topic, TopicQuestion } from "payload/generated-types";
+import { Topic, TopicQuestion, Tag } from "payload/generated-types";
 
 const runSeeder = async (): Promise<void> => {
   dotenv.config({
@@ -114,8 +114,6 @@ const runSeeder = async (): Promise<void> => {
           },
         })
         .then(async (res) => {
-          payload.logger.info(`Created topic question: ${res.id} ${res.title}`);
-
           const topicQuestions = await payload.find({
             collection: "topics",
             where: {
@@ -123,10 +121,6 @@ const runSeeder = async (): Promise<void> => {
             },
           });
           const topicQuestionsIds = topicQuestions.docs.at(0).questions;
-
-          payload.logger.info(
-            `Adding question ${res.id} to topic ${(res.topic as any).id} questions`,
-          );
           await payload.update({
             collection: "topics",
             where: { id: { equals: (res.topic as any).id } },
@@ -137,6 +131,89 @@ const runSeeder = async (): Promise<void> => {
         });
     }),
   ]);
+
+  const Tags: Tag[] = [
+    {
+      id: 1,
+      name: "front-end",
+      createdAt: "2021-09-01T00:00:00.000Z",
+      updatedAt: "2021-09-01T00:00:00.000Z",
+    },
+    {
+      id: 2,
+      name: "back-end",
+      createdAt: "2021-09-01T00:00:00.000Z",
+      updatedAt: "2021-09-01T00:00:00.000Z",
+    },
+    {
+      id: 3,
+      name: "full-stack",
+      createdAt: "2021-09-01T00:00:00.000Z",
+      updatedAt: "2021-09-01T00:00:00.000Z",
+    },
+    {
+      id: 4,
+      name: "frameworks",
+      createdAt: "2021-09-01T00:00:00.000Z",
+      updatedAt: "2021-09-01T00:00:00.000Z",
+    },
+  ];
+
+  let tags: { id: number; name: string }[] = [];
+
+  const findTag = async (name: string) => {
+    if (tags.length === 0) {
+      const allTags = await payload.find({
+        collection: "tags",
+      });
+      tags = allTags.docs.map((tag) => ({ id: tag.id, name: tag.name }));
+    }
+
+    return tags.find((tag) => tag.name === name)?.id;
+  };
+
+  payload.logger.info(`Seeding ${Tags.length} tags`);
+  await Promise.all(
+    Tags.map(async (tag) => {
+      await payload
+        .create({
+          collection: "tags",
+          data: {
+            ...tag,
+          },
+        })
+        .then((res) => {
+          tags.push({ id: res.id, name: res.name });
+        });
+    }),
+  );
+  await payload.update({
+    collection: "topics",
+    where: {
+      slug: { equals: "next-js" },
+    },
+    data: {
+      tags: [await findTag("full-stack"), await findTag("frameworks")],
+    },
+  });
+  await payload.update({
+    collection: "topics",
+    where: {
+      slug: { equals: "react" },
+    },
+    data: {
+      tags: [await findTag("front-end"), await findTag("frameworks")],
+    },
+  });
+  await payload.update({
+    collection: "topics",
+    where: {
+      slug: { equals: "graphql" },
+    },
+    data: {
+      tags: [await findTag("back-end"), await findTag("frameworks")],
+    },
+  });
 
   payload.logger.info("Seeding complete");
 

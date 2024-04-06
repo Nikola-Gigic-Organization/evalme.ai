@@ -17,14 +17,16 @@ const TopicCard: React.FC<TopicCardProps> = ({
 }) => {
   return (
     <Link className="group relative h-56 sm:w-56" href={`/topic/${slug}`}>
-      <div className="absolute bottom-0 left-0 z-20 flex h-full w-full origin-bottom-left flex-col justify-between border border-black bg-white p-4 transition-all duration-300 ease-in-out group-hover:bottom-2 group-hover:left-2">
-        <div>{title}</div>
-        <div>{description}</div>
+      <div className="absolute bottom-0 left-0 z-20 flex h-full w-full origin-bottom-left flex-col justify-between space-y-4 border border-black bg-white p-4 transition-all duration-300 ease-in-out group-hover:bottom-2 group-hover:left-2">
+        <div className="overflow-y-hidden">
+          <span className="text-lg font-bold">{title}</span>
+          <p>{description}</p>
+        </div>
         <div className="grid grid-cols-2 gap-2">
           {tags?.map((tag) => (
             <span
               key={tag}
-              className="h-fit w-full bg-black px-2 font-extralight text-white"
+              className="h-fit w-fit bg-black px-2 font-extralight text-white"
             >
               {tag}
             </span>

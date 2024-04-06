@@ -38,7 +38,7 @@ const InterviewAnswer: FC<{ answer: string }> = ({ answer }) => {
         }
         return answer.slice(0, prev.length + 1);
       });
-    }, 10);
+    }, 1);
 
     return () => clearInterval(interval);
   }, [answer, animatedAnswer]);
