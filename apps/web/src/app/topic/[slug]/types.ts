@@ -3,13 +3,13 @@ import { z } from "zod";
 const MIN_ANSWER_LENGTH = 2;
 
 export type QuestionFormProps = {
-  answerId: string;
-  answer: string;
+  questionId: string;
+  userAnswer: string;
 };
 
 export const questionFormSchema = z.object({
-  answerId: z.string().min(1),
-  answer: z
+  questionId: z.string().min(1),
+  userAnswer: z
     .string()
     .min(
       MIN_ANSWER_LENGTH,

@@ -23,7 +23,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
 
   const { register, reset } = useForm<QuestionFormProps>({
     defaultValues: {
-      answer: "",
+      userAnswer: "",
     },
   });
 
@@ -44,10 +44,12 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
       return;
     }
 
-    data.append("answerId", topicActiveQuestionIndex.toString());
+    if (topicActiveQuestion?.id) {
+      data.append("questionId", topicActiveQuestion.id.toString());
+    }
     const res = await submitQuestion(data);
     if (res.errors.length === 0) {
-      setActiveAnswer(res.interviewAnswer);
+      setActiveAnswer(res.openAIAnswer);
       setShowAnswer(true);
       setValue("");
       reset();
@@ -75,7 +77,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
                 </div>
                 <div className="flex w-full flex-col space-y-2">
                   <textarea
-                    {...register("answer")}
+                    {...register("userAnswer")}
                     ref={inputRef}
                     className={clsx([
                       "resize-none border px-3 py-2 outline-0 ring-0 transition-all placeholder:font-extralight hover:border-black hover:placeholder:text-black focus:border-black focus:placeholder:text-black",
@@ -137,16 +139,16 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
       ) : (
         <div className="flex h-24 w-full justify-between">
           <div className="relative h-11 w-14">
-            <div className="absolute bottom-2 left-2 z-10 flex w-full justify-center border border-black bg-white p-2 hover:cursor-default">
+            <div className="absolute bottom-1 left-1 z-10 flex w-full justify-center border border-black bg-white p-2 hover:cursor-default">
               {topicActiveQuestionIndex + 1} / {topicQuestionsLength}
             </div>
-            <div className="absolute right-2 top-2 h-full w-full bg-black" />
+            <div className="absolute right-1 top-1 h-full w-full bg-black" />
           </div>
-          <div className="relative h-11 w-20">
-            <button className="absolute bottom-2 left-2 z-10 h-full w-full border border-black bg-white p-2 hover:bg-gray-100 active:bg-gray-300">
+          <div className="group relative h-11 w-20">
+            <button className="absolute bottom-1 left-1 z-10 h-full w-full border border-black bg-white p-2 transition-all duration-300 active:bg-gray-300 group-hover:bottom-2 group-hover:left-2">
               {showAnswer ? "Next" : "Submit"}
             </button>
-            <div className="absolute right-2 top-2 h-full w-full bg-black" />
+            <div className="absolute right-1 top-1 h-full w-full bg-black transition-all duration-300 group-hover:right-2 group-hover:top-2" />
           </div>
         </div>
       )}

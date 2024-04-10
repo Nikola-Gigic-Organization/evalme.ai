@@ -12,6 +12,7 @@ export interface Config {
     tags: Tag;
     topics: Topic;
     topicQuestion: TopicQuestion;
+    'user-answers': UserAnswer;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
@@ -70,6 +71,20 @@ export interface TopicQuestion {
   title: string;
   text: string;
   order: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user-answers".
+ */
+export interface UserAnswer {
+  id: number;
+  user: number | User;
+  question: number | TopicQuestion;
+  answer: {
+    [k: string]: unknown;
+  }[];
   updatedAt: string;
   createdAt: string;
 }

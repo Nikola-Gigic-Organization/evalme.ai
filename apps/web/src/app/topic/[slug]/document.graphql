@@ -1,14 +1,20 @@
-query getTopicBySlug($slug: String!) {
-  Topics(where: { slug: { equals: $slug } }) {
-    docs {
-      id
-      title
-      questions {
-        id
-        title
-        text
-      }
-      questionsCount
-    }
-  }
-}
+# query getTopicBySlug($slug: String!) {
+#   Topics(where: { slug: { equals: $slug } }, sort: "order") {
+#     docs {
+#       id
+#       title
+#       questions {
+#         id
+#         title
+#         text
+#       }
+#       questionsCount
+#     }
+#   }
+# }
+
+# mutation createUserAnswer($data: mutationUserAnswerInput!) {
+#   createUserAnswer(data: $data) {
+#     id
+#   }
+# }

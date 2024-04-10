@@ -17,7 +17,7 @@ const TopicCard: React.FC<TopicCardProps> = ({
 }) => {
   return (
     <Link className="group relative h-56 sm:w-56" href={`/topic/${slug}`}>
-      <div className="absolute bottom-0 left-0 z-20 flex h-full w-full origin-bottom-left flex-col justify-between space-y-4 border border-black bg-white p-4 transition-all duration-300 ease-in-out group-hover:bottom-2 group-hover:left-2">
+      <div className="absolute bottom-1 left-1 z-20 flex h-full w-full origin-bottom-left flex-col justify-between space-y-4 border border-black bg-white p-4 transition-all duration-300 ease-in-out group-hover:bottom-2 group-hover:left-2">
         <div className="overflow-y-hidden">
           <span className="text-lg font-bold">{title}</span>
           <p>{description}</p>
@@ -33,7 +33,7 @@ const TopicCard: React.FC<TopicCardProps> = ({
           ))}
         </div>
       </div>
-      <div className="absolute right-0 top-0 z-10 h-full w-full origin-top-right bg-black transition-all duration-300 group-hover:right-2 group-hover:top-2" />
+      <div className="absolute right-1 top-1 z-10 h-full w-full origin-top-right bg-black transition-all duration-300 group-hover:right-2 group-hover:top-2" />
     </Link>
   );
 };

@@ -1,7 +1,8 @@
 "use server";
 
-import { formDataResolver } from "@/lib";
+import { formDataResolver, apolloClient } from "@/lib";
 import { questionFormSchema } from "./types";
+import { CreateUserAnswerDocument, CheckAuthDocument } from "@/gql/graphql";
 
 const MockAnswers = [
   `<span class="text-xl font-bold text-blue-600">The Dawn of Quantum Computing</span>
@@ -18,40 +19,54 @@ const MockAnswers = [
   <span class="text-xl font-bold text-purple-600">Looking Ahead</span>
   The journey towards a quantum future is filled with both excitement and uncertainty. As we continue to unlock the mysteries of quantum mechanics and develop new technologies, the potential for quantum computing to solve some of humanity's most pressing challenges grows. However, realizing this potential will require not only technological innovation but also a concerted effort to address the ethical, security, and societal implications of this groundbreaking technology.  
   `,
-  "I am another mock answer",
-  "I am a third mock answer",
-  "I am a fourth mock answer",
 ];
 
-const mockAnswerFetch = async ({
-  answerIndex,
+const mockOpenAIAnswerFetch = async ({
   cb,
 }: {
-  answerIndex: number;
   cb?: (answer: string) => void;
 }): Promise<string> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const answer = MockAnswers.at(answerIndex);
+      const answer = MockAnswers.at(0);
       cb?.(answer!);
-      resolve(MockAnswers.at(answerIndex)!);
+      resolve(MockAnswers.at(0)!);
     }, 500);
   });
 };
 
 export const submitQuestion = async (
   formData: FormData,
-): Promise<{ interviewAnswer: string; errors: Array<{ message: string }> }> => {
+): Promise<{ openAIAnswer: string; errors: Array<{ message: string }> }> => {
   const data = formDataResolver(formData, questionFormSchema);
 
   const errors = data?.errors || [];
 
-  const interviewAnswer = await mockAnswerFetch({
-    answerIndex: Number(data?.answerId!),
-  });
+  const openAIAnswer = await mockOpenAIAnswerFetch({});
+
+  if (errors.length === 0) {
+    const user = await apolloClient.query({
+      query: CheckAuthDocument,
+    });
+
+    console.log("user", user.data?.meUser);
+
+    if (user.data?.meUser?.user?.id) {
+      await apolloClient.mutate({
+        mutation: CreateUserAnswerDocument,
+        variables: {
+          data: {
+            user: user.data.meUser.user.id,
+            answer: data?.userAnswer ?? "",
+            question: Number(data?.questionId),
+          },
+        },
+      });
+    }
+  }
 
   return {
-    interviewAnswer,
+    openAIAnswer,
     errors,
   };
 };

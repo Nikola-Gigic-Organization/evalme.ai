@@ -31,6 +31,9 @@ const Topics: CollectionConfig = {
       type: "relationship",
       relationTo: "topicQuestion",
       hasMany: true,
+      admin: {
+        isSortable: true,
+      },
       filterOptions: async ({ data, id }) => {
         return {
           topic: {
@@ -49,6 +52,7 @@ const Topics: CollectionConfig = {
       hooks: {
         afterRead: [
           async ({ data }) => {
+            console.log("data", data);
             return data?.questions?.length ?? 0;
           },
         ],

@@ -1,19 +1,19 @@
-query getAllTopics {
-  Topics {
-    docs {
-      id
-      slug
-      title
-      description
-      questions {
-        id
-        title
-        text
-      }
-      tags {
-        id
-        name
-      }
-    }
-  }
-}
+# query getAllTopics {
+#   Topics {
+#     docs {
+#       id
+#       slug
+#       title
+#       description
+#       questions {
+#         id
+#         title
+#         text
+#       }
+#       tags {
+#         id
+#         name
+#       }
+#     }
+#   }
+# }

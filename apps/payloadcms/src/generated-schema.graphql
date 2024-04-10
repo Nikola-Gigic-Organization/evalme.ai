@@ -13,6 +13,9 @@ type Query {
   TopicQuestion(id: Int!, draft: Boolean): TopicQuestion
   TopicQuestions(draft: Boolean, where: TopicQuestion_where, limit: Int, page: Int, sort: String): TopicQuestions
   docAccessTopicQuestion(id: Int!): topicQuestionDocAccess
+  UserAnswer(id: Int!, draft: Boolean): UserAnswer
+  UserAnswers(draft: Boolean, where: UserAnswer_where, limit: Int, page: Int, sort: String): UserAnswers
+  docAccessUserAnswer(id: Int!): user_answersDocAccess
   PayloadPreference(id: Int!, draft: Boolean): PayloadPreference
   PayloadPreferences(draft: Boolean, where: PayloadPreference_where, limit: Int, page: Int, sort: String): PayloadPreferences
   docAccessPayloadPreference(id: Int!): payload_preferencesDocAccess
@@ -1186,6 +1189,271 @@ type TopicQuestionDeleteDocAccess {
   where: JSONObject
 }
 
+type UserAnswer {
+  id: Int
+  user: User!
+  question: TopicQuestion!
+  answer: String!
+  updatedAt: DateTime
+  createdAt: DateTime
+}
+
+type UserAnswers {
+  docs: [UserAnswer]
+  hasNextPage: Boolean
+  hasPrevPage: Boolean
+  limit: Int
+  nextPage: Int
+  offset: Int
+  page: Int
+  pagingCounter: Int
+  prevPage: Int
+  totalDocs: Int
+  totalPages: Int
+}
+
+input UserAnswer_where {
+  user: UserAnswer_user_operator
+  question: UserAnswer_question_operator
+  answer: UserAnswer_answer_operator
+  updatedAt: UserAnswer_updatedAt_operator
+  createdAt: UserAnswer_createdAt_operator
+  id: UserAnswer_id_operator
+  AND: [UserAnswer_where_and]
+  OR: [UserAnswer_where_or]
+}
+
+input UserAnswer_user_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
+}
+
+input UserAnswer_question_operator {
+  equals: JSON
+  not_equals: JSON
+  in: [JSON]
+  not_in: [JSON]
+  all: [JSON]
+}
+
+input UserAnswer_answer_operator {
+  equals: String
+  not_equals: String
+  like: String
+  contains: String
+  in: [String]
+  not_in: [String]
+  all: [String]
+}
+
+input UserAnswer_updatedAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input UserAnswer_createdAt_operator {
+  equals: DateTime
+  not_equals: DateTime
+  greater_than_equal: DateTime
+  greater_than: DateTime
+  less_than_equal: DateTime
+  less_than: DateTime
+  like: DateTime
+  exists: Boolean
+}
+
+input UserAnswer_id_operator {
+  equals: Int
+  not_equals: Int
+  greater_than_equal: Int
+  greater_than: Int
+  less_than_equal: Int
+  less_than: Int
+  exists: Boolean
+}
+
+input UserAnswer_where_and {
+  user: UserAnswer_user_operator
+  question: UserAnswer_question_operator
+  answer: UserAnswer_answer_operator
+  updatedAt: UserAnswer_updatedAt_operator
+  createdAt: UserAnswer_createdAt_operator
+  id: UserAnswer_id_operator
+  AND: [UserAnswer_where_and]
+  OR: [UserAnswer_where_or]
+}
+
+input UserAnswer_where_or {
+  user: UserAnswer_user_operator
+  question: UserAnswer_question_operator
+  answer: UserAnswer_answer_operator
+  updatedAt: UserAnswer_updatedAt_operator
+  createdAt: UserAnswer_createdAt_operator
+  id: UserAnswer_id_operator
+  AND: [UserAnswer_where_and]
+  OR: [UserAnswer_where_or]
+}
+
+type user_answersDocAccess {
+  fields: UserAnswersDocAccessFields
+  create: UserAnswersCreateDocAccess
+  read: UserAnswersReadDocAccess
+  update: UserAnswersUpdateDocAccess
+  delete: UserAnswersDeleteDocAccess
+}
+
+type UserAnswersDocAccessFields {
+  user: UserAnswersDocAccessFields_user
+  question: UserAnswersDocAccessFields_question
+  answer: UserAnswersDocAccessFields_answer
+  updatedAt: UserAnswersDocAccessFields_updatedAt
+  createdAt: UserAnswersDocAccessFields_createdAt
+}
+
+type UserAnswersDocAccessFields_user {
+  create: UserAnswersDocAccessFields_user_Create
+  read: UserAnswersDocAccessFields_user_Read
+  update: UserAnswersDocAccessFields_user_Update
+  delete: UserAnswersDocAccessFields_user_Delete
+}
+
+type UserAnswersDocAccessFields_user_Create {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_user_Read {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_user_Update {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_user_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_question {
+  create: UserAnswersDocAccessFields_question_Create
+  read: UserAnswersDocAccessFields_question_Read
+  update: UserAnswersDocAccessFields_question_Update
+  delete: UserAnswersDocAccessFields_question_Delete
+}
+
+type UserAnswersDocAccessFields_question_Create {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_question_Read {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_question_Update {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_question_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_answer {
+  create: UserAnswersDocAccessFields_answer_Create
+  read: UserAnswersDocAccessFields_answer_Read
+  update: UserAnswersDocAccessFields_answer_Update
+  delete: UserAnswersDocAccessFields_answer_Delete
+}
+
+type UserAnswersDocAccessFields_answer_Create {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_answer_Read {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_answer_Update {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_answer_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_updatedAt {
+  create: UserAnswersDocAccessFields_updatedAt_Create
+  read: UserAnswersDocAccessFields_updatedAt_Read
+  update: UserAnswersDocAccessFields_updatedAt_Update
+  delete: UserAnswersDocAccessFields_updatedAt_Delete
+}
+
+type UserAnswersDocAccessFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_createdAt {
+  create: UserAnswersDocAccessFields_createdAt_Create
+  read: UserAnswersDocAccessFields_createdAt_Read
+  update: UserAnswersDocAccessFields_createdAt_Update
+  delete: UserAnswersDocAccessFields_createdAt_Delete
+}
+
+type UserAnswersDocAccessFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type UserAnswersDocAccessFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersCreateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type UserAnswersReadDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type UserAnswersUpdateDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type UserAnswersDeleteDocAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
 type PayloadPreference {
   id: Int
   user: PayloadPreference_User_Relationship!
@@ -1472,6 +1740,7 @@ type Access {
   tags: tagsAccess
   topics: topicsAccess
   topicQuestion: topicQuestionAccess
+  user_answers: user_answersAccess
   payload_preferences: payload_preferencesAccess
 }
 
@@ -2133,6 +2402,157 @@ type TopicQuestionDeleteAccess {
   where: JSONObject
 }
 
+type user_answersAccess {
+  fields: UserAnswersFields
+  create: UserAnswersCreateAccess
+  read: UserAnswersReadAccess
+  update: UserAnswersUpdateAccess
+  delete: UserAnswersDeleteAccess
+}
+
+type UserAnswersFields {
+  user: UserAnswersFields_user
+  question: UserAnswersFields_question
+  answer: UserAnswersFields_answer
+  updatedAt: UserAnswersFields_updatedAt
+  createdAt: UserAnswersFields_createdAt
+}
+
+type UserAnswersFields_user {
+  create: UserAnswersFields_user_Create
+  read: UserAnswersFields_user_Read
+  update: UserAnswersFields_user_Update
+  delete: UserAnswersFields_user_Delete
+}
+
+type UserAnswersFields_user_Create {
+  permission: Boolean!
+}
+
+type UserAnswersFields_user_Read {
+  permission: Boolean!
+}
+
+type UserAnswersFields_user_Update {
+  permission: Boolean!
+}
+
+type UserAnswersFields_user_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersFields_question {
+  create: UserAnswersFields_question_Create
+  read: UserAnswersFields_question_Read
+  update: UserAnswersFields_question_Update
+  delete: UserAnswersFields_question_Delete
+}
+
+type UserAnswersFields_question_Create {
+  permission: Boolean!
+}
+
+type UserAnswersFields_question_Read {
+  permission: Boolean!
+}
+
+type UserAnswersFields_question_Update {
+  permission: Boolean!
+}
+
+type UserAnswersFields_question_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersFields_answer {
+  create: UserAnswersFields_answer_Create
+  read: UserAnswersFields_answer_Read
+  update: UserAnswersFields_answer_Update
+  delete: UserAnswersFields_answer_Delete
+}
+
+type UserAnswersFields_answer_Create {
+  permission: Boolean!
+}
+
+type UserAnswersFields_answer_Read {
+  permission: Boolean!
+}
+
+type UserAnswersFields_answer_Update {
+  permission: Boolean!
+}
+
+type UserAnswersFields_answer_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersFields_updatedAt {
+  create: UserAnswersFields_updatedAt_Create
+  read: UserAnswersFields_updatedAt_Read
+  update: UserAnswersFields_updatedAt_Update
+  delete: UserAnswersFields_updatedAt_Delete
+}
+
+type UserAnswersFields_updatedAt_Create {
+  permission: Boolean!
+}
+
+type UserAnswersFields_updatedAt_Read {
+  permission: Boolean!
+}
+
+type UserAnswersFields_updatedAt_Update {
+  permission: Boolean!
+}
+
+type UserAnswersFields_updatedAt_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersFields_createdAt {
+  create: UserAnswersFields_createdAt_Create
+  read: UserAnswersFields_createdAt_Read
+  update: UserAnswersFields_createdAt_Update
+  delete: UserAnswersFields_createdAt_Delete
+}
+
+type UserAnswersFields_createdAt_Create {
+  permission: Boolean!
+}
+
+type UserAnswersFields_createdAt_Read {
+  permission: Boolean!
+}
+
+type UserAnswersFields_createdAt_Update {
+  permission: Boolean!
+}
+
+type UserAnswersFields_createdAt_Delete {
+  permission: Boolean!
+}
+
+type UserAnswersCreateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type UserAnswersReadAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type UserAnswersUpdateAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
+type UserAnswersDeleteAccess {
+  permission: Boolean!
+  where: JSONObject
+}
+
 type payload_preferencesAccess {
   fields: PayloadPreferencesFields
   create: PayloadPreferencesCreateAccess
@@ -2304,6 +2724,9 @@ type Mutation {
   createTopicQuestion(data: mutationTopicQuestionInput!, draft: Boolean): TopicQuestion
   updateTopicQuestion(id: Int!, autosave: Boolean, data: mutationTopicQuestionUpdateInput!, draft: Boolean): TopicQuestion
   deleteTopicQuestion(id: Int!): TopicQuestion
+  createUserAnswer(data: mutationUserAnswerInput!, draft: Boolean): UserAnswer
+  updateUserAnswer(id: Int!, autosave: Boolean, data: mutationUserAnswerUpdateInput!, draft: Boolean): UserAnswer
+  deleteUserAnswer(id: Int!): UserAnswer
   createPayloadPreference(data: mutationPayloadPreferenceInput!, draft: Boolean): PayloadPreference
   updatePayloadPreference(id: Int!, autosave: Boolean, data: mutationPayloadPreferenceUpdateInput!, draft: Boolean): PayloadPreference
   deletePayloadPreference(id: Int!): PayloadPreference
@@ -2407,6 +2830,22 @@ input mutationTopicQuestionUpdateInput {
   title: String
   text: String
   order: Float
+  updatedAt: String
+  createdAt: String
+}
+
+input mutationUserAnswerInput {
+  user: Int
+  question: Int
+  answer: String!
+  updatedAt: String
+  createdAt: String
+}
+
+input mutationUserAnswerUpdateInput {
+  user: Int
+  question: Int
+  answer: String
   updatedAt: String
   createdAt: String
 }
