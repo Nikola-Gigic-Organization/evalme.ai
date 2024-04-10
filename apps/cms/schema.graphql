@@ -6,6 +6,8 @@ type User {
   name: String
   email: String
   password: PasswordState
+  topicAnswers(where: UserAnswerWhereInput! = {}, orderBy: [UserAnswerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserAnswerWhereUniqueInput): [UserAnswer!]
+  topicAnswersCount(where: UserAnswerWhereInput! = {}): Int
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -28,6 +30,7 @@ input UserWhereInput {
   id: IDFilter
   name: StringFilter
   email: StringFilter
+  topicAnswers: UserAnswerManyRelationFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
@@ -77,6 +80,12 @@ input NestedStringFilter {
   not: NestedStringFilter
 }
 
+input UserAnswerManyRelationFilter {
+  every: UserAnswerWhereInput
+  some: UserAnswerWhereInput
+  none: UserAnswerWhereInput
+}
+
 input DateTimeNullableFilter {
   equals: DateTime
   in: [DateTime!]
@@ -105,8 +114,16 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  topicAnswers: UserAnswerRelateToManyForUpdateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input UserAnswerRelateToManyForUpdateInput {
+  disconnect: [UserAnswerWhereUniqueInput!]
+  set: [UserAnswerWhereUniqueInput!]
+  create: [UserAnswerCreateInput!]
+  connect: [UserAnswerWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -118,8 +135,318 @@ input UserCreateInput {
   name: String
   email: String
   password: String
+  topicAnswers: UserAnswerRelateToManyForCreateInput
   createdAt: DateTime
   updatedAt: DateTime
+}
+
+input UserAnswerRelateToManyForCreateInput {
+  create: [UserAnswerCreateInput!]
+  connect: [UserAnswerWhereUniqueInput!]
+}
+
+type Topic {
+  id: ID!
+  slug: String
+  title: String
+  description: String
+  questions(where: TopicQuestionWhereInput! = {}, orderBy: [TopicQuestionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TopicQuestionWhereUniqueInput): [TopicQuestion!]
+  questionsCount(where: TopicQuestionWhereInput! = {}): Int
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  tagsCount(where: TagWhereInput! = {}): Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TopicWhereUniqueInput {
+  id: ID
+  slug: String
+}
+
+input TopicWhereInput {
+  AND: [TopicWhereInput!]
+  OR: [TopicWhereInput!]
+  NOT: [TopicWhereInput!]
+  id: IDFilter
+  slug: StringFilter
+  title: StringFilter
+  description: StringFilter
+  questions: TopicQuestionManyRelationFilter
+  tags: TagManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input TopicQuestionManyRelationFilter {
+  every: TopicQuestionWhereInput
+  some: TopicQuestionWhereInput
+  none: TopicQuestionWhereInput
+}
+
+input TagManyRelationFilter {
+  every: TagWhereInput
+  some: TagWhereInput
+  none: TagWhereInput
+}
+
+input TopicOrderByInput {
+  id: OrderDirection
+  slug: OrderDirection
+  title: OrderDirection
+  description: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input TopicUpdateInput {
+  slug: String
+  title: String
+  description: String
+  questions: TopicQuestionRelateToManyForUpdateInput
+  tags: TagRelateToManyForUpdateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TopicQuestionRelateToManyForUpdateInput {
+  disconnect: [TopicQuestionWhereUniqueInput!]
+  set: [TopicQuestionWhereUniqueInput!]
+  create: [TopicQuestionCreateInput!]
+  connect: [TopicQuestionWhereUniqueInput!]
+}
+
+input TagRelateToManyForUpdateInput {
+  disconnect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+input TopicUpdateArgs {
+  where: TopicWhereUniqueInput!
+  data: TopicUpdateInput!
+}
+
+input TopicCreateInput {
+  slug: String
+  title: String
+  description: String
+  questions: TopicQuestionRelateToManyForCreateInput
+  tags: TagRelateToManyForCreateInput
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TopicQuestionRelateToManyForCreateInput {
+  create: [TopicQuestionCreateInput!]
+  connect: [TopicQuestionWhereUniqueInput!]
+}
+
+input TagRelateToManyForCreateInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+type TopicQuestion {
+  id: ID!
+  topic: Topic
+  title: String
+  text: String
+  order: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TopicQuestionWhereUniqueInput {
+  id: ID
+}
+
+input TopicQuestionWhereInput {
+  AND: [TopicQuestionWhereInput!]
+  OR: [TopicQuestionWhereInput!]
+  NOT: [TopicQuestionWhereInput!]
+  id: IDFilter
+  topic: TopicWhereInput
+  title: StringFilter
+  text: StringFilter
+  order: IntNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
+}
+
+input TopicQuestionOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  text: OrderDirection
+  order: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input TopicQuestionUpdateInput {
+  topic: TopicRelateToOneForUpdateInput
+  title: String
+  text: String
+  order: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TopicRelateToOneForUpdateInput {
+  create: TopicCreateInput
+  connect: TopicWhereUniqueInput
+  disconnect: Boolean
+}
+
+input TopicQuestionUpdateArgs {
+  where: TopicQuestionWhereUniqueInput!
+  data: TopicQuestionUpdateInput!
+}
+
+input TopicQuestionCreateInput {
+  topic: TopicRelateToOneForCreateInput
+  title: String
+  text: String
+  order: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TopicRelateToOneForCreateInput {
+  create: TopicCreateInput
+  connect: TopicWhereUniqueInput
+}
+
+type Tag {
+  id: ID!
+  name: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TagWhereUniqueInput {
+  id: ID
+  name: String
+}
+
+input TagWhereInput {
+  AND: [TagWhereInput!]
+  OR: [TagWhereInput!]
+  NOT: [TagWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input TagOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input TagUpdateInput {
+  name: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TagUpdateArgs {
+  where: TagWhereUniqueInput!
+  data: TagUpdateInput!
+}
+
+input TagCreateInput {
+  name: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type UserAnswer {
+  id: ID!
+  user: User
+  question: TopicQuestion
+  answer: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input UserAnswerWhereUniqueInput {
+  id: ID
+}
+
+input UserAnswerWhereInput {
+  AND: [UserAnswerWhereInput!]
+  OR: [UserAnswerWhereInput!]
+  NOT: [UserAnswerWhereInput!]
+  id: IDFilter
+  user: UserWhereInput
+  question: TopicQuestionWhereInput
+  answer: StringFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+}
+
+input UserAnswerOrderByInput {
+  id: OrderDirection
+  answer: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input UserAnswerUpdateInput {
+  user: UserRelateToOneForUpdateInput
+  question: TopicQuestionRelateToOneForUpdateInput
+  answer: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input UserRelateToOneForUpdateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+}
+
+input TopicQuestionRelateToOneForUpdateInput {
+  create: TopicQuestionCreateInput
+  connect: TopicQuestionWhereUniqueInput
+  disconnect: Boolean
+}
+
+input UserAnswerUpdateArgs {
+  where: UserAnswerWhereUniqueInput!
+  data: UserAnswerUpdateInput!
+}
+
+input UserAnswerCreateInput {
+  user: UserRelateToOneForCreateInput
+  question: TopicQuestionRelateToOneForCreateInput
+  answer: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input UserRelateToOneForCreateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+}
+
+input TopicQuestionRelateToOneForCreateInput {
+  create: TopicQuestionCreateInput
+  connect: TopicQuestionWhereUniqueInput
 }
 
 """
@@ -134,6 +461,30 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createTopic(data: TopicCreateInput!): Topic
+  createTopics(data: [TopicCreateInput!]!): [Topic]
+  updateTopic(where: TopicWhereUniqueInput!, data: TopicUpdateInput!): Topic
+  updateTopics(data: [TopicUpdateArgs!]!): [Topic]
+  deleteTopic(where: TopicWhereUniqueInput!): Topic
+  deleteTopics(where: [TopicWhereUniqueInput!]!): [Topic]
+  createTopicQuestion(data: TopicQuestionCreateInput!): TopicQuestion
+  createTopicQuestions(data: [TopicQuestionCreateInput!]!): [TopicQuestion]
+  updateTopicQuestion(where: TopicQuestionWhereUniqueInput!, data: TopicQuestionUpdateInput!): TopicQuestion
+  updateTopicQuestions(data: [TopicQuestionUpdateArgs!]!): [TopicQuestion]
+  deleteTopicQuestion(where: TopicQuestionWhereUniqueInput!): TopicQuestion
+  deleteTopicQuestions(where: [TopicQuestionWhereUniqueInput!]!): [TopicQuestion]
+  createTag(data: TagCreateInput!): Tag
+  createTags(data: [TagCreateInput!]!): [Tag]
+  updateTag(where: TagWhereUniqueInput!, data: TagUpdateInput!): Tag
+  updateTags(data: [TagUpdateArgs!]!): [Tag]
+  deleteTag(where: TagWhereUniqueInput!): Tag
+  deleteTags(where: [TagWhereUniqueInput!]!): [Tag]
+  createUserAnswer(data: UserAnswerCreateInput!): UserAnswer
+  createUserAnswers(data: [UserAnswerCreateInput!]!): [UserAnswer]
+  updateUserAnswer(where: UserAnswerWhereUniqueInput!, data: UserAnswerUpdateInput!): UserAnswer
+  updateUserAnswers(data: [UserAnswerUpdateArgs!]!): [UserAnswer]
+  deleteUserAnswer(where: UserAnswerWhereUniqueInput!): UserAnswer
+  deleteUserAnswers(where: [UserAnswerWhereUniqueInput!]!): [UserAnswer]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -160,6 +511,18 @@ type Query {
   users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
+  topics(where: TopicWhereInput! = {}, orderBy: [TopicOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TopicWhereUniqueInput): [Topic!]
+  topic(where: TopicWhereUniqueInput!): Topic
+  topicsCount(where: TopicWhereInput! = {}): Int
+  topicQuestions(where: TopicQuestionWhereInput! = {}, orderBy: [TopicQuestionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TopicQuestionWhereUniqueInput): [TopicQuestion!]
+  topicQuestion(where: TopicQuestionWhereUniqueInput!): TopicQuestion
+  topicQuestionsCount(where: TopicQuestionWhereInput! = {}): Int
+  tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
+  tag(where: TagWhereUniqueInput!): Tag
+  tagsCount(where: TagWhereInput! = {}): Int
+  userAnswers(where: UserAnswerWhereInput! = {}, orderBy: [UserAnswerOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserAnswerWhereUniqueInput): [UserAnswer!]
+  userAnswer(where: UserAnswerWhereUniqueInput!): UserAnswer
+  userAnswersCount(where: UserAnswerWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

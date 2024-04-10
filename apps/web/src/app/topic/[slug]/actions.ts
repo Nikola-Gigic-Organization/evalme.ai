@@ -2,7 +2,7 @@
 
 import { formDataResolver, apolloClient } from "@/lib";
 import { questionFormSchema } from "./types";
-import { CreateUserAnswerDocument, CheckAuthDocument } from "@/gql/graphql";
+import { CreateUserAnswerDocument } from "@/gql/graphql";
 
 const MockAnswers = [
   `<span class="text-xl font-bold text-blue-600">The Dawn of Quantum Computing</span>
@@ -45,25 +45,33 @@ export const submitQuestion = async (
   const openAIAnswer = await mockOpenAIAnswerFetch({});
 
   if (errors.length === 0) {
-    const user = await apolloClient.query({
-      query: CheckAuthDocument,
-    });
+    // const user = await apolloClient.query({
+    //   query: CheckAuthDocument,
+    // });
 
-    console.log("user", user.data?.meUser);
+    // console.log("user", user.data?.meUser);
 
-    if (user.data?.meUser?.user?.id) {
-      await apolloClient.mutate({
-        mutation: CreateUserAnswerDocument,
-        variables: {
-          data: {
-            user: user.data.meUser.user.id,
-            answer: data?.userAnswer ?? "",
-            question: Number(data?.questionId),
+    // if (user.data?.meUser?.user?.id) {
+    await apolloClient.mutate({
+      mutation: CreateUserAnswerDocument,
+      variables: {
+        data: {
+          user: {
+            connect: {
+              id: "clutood670000xrn8tbb6ggfa",
+            },
+          },
+          answer: data?.userAnswer ?? "",
+          question: {
+            connect: {
+              id: data?.questionId,
+            },
           },
         },
-      });
-    }
+      },
+    });
   }
+  // }
 
   return {
     openAIAnswer,

@@ -3,10 +3,9 @@ import { type Lists, type Context } from ".keystone/types";
 import { allowAll } from "@keystone-6/core/access";
 import {
   text,
-  relationship,
   password,
   timestamp,
-  select,
+  relationship,
 } from "@keystone-6/core/fields";
 
 const User: ListConfig<Lists.User.TypeInfo> = list({
@@ -19,7 +18,7 @@ const User: ListConfig<Lists.User.TypeInfo> = list({
     }),
 
     password: password({ validation: { isRequired: true } }),
-
+    topicAnswers: relationship({ ref: "UserAnswer.user", many: true }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

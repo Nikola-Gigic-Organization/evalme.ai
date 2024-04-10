@@ -1,19 +1,17 @@
-# query getAllTopics {
-#   Topics {
-#     docs {
-#       id
-#       slug
-#       title
-#       description
-#       questions {
-#         id
-#         title
-#         text
-#       }
-#       tags {
-#         id
-#         name
-#       }
-#     }
-#   }
-# }
+query GetAllTopics {
+  topics(orderBy: { title: asc }) {
+    id
+    slug
+    title
+    description
+    questions {
+      id
+      title
+      text
+    }
+    tags {
+      id
+      name
+    }
+  }
+}

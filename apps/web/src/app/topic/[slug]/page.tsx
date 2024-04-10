@@ -18,7 +18,7 @@ export default async function Page({
       slug,
     },
   });
-  const topic = data?.Topics?.docs?.at(0);
+  const topic = data.topic;
 
   return (
     <div className="flex h-screen w-full justify-center px-4 pt-20">

@@ -33,7 +33,7 @@ __export(keystone_exports, {
   default: () => keystone_default
 });
 module.exports = __toCommonJS(keystone_exports);
-var import_core2 = require("@keystone-6/core");
+var import_core6 = require("@keystone-6/core");
 
 // schemas/User.ts
 var import_core = require("@keystone-6/core");
@@ -48,6 +48,7 @@ var User = (0, import_core.list)({
       isIndexed: "unique"
     }),
     password: (0, import_fields.password)({ validation: { isRequired: true } }),
+    topicAnswers: (0, import_fields.relationship)({ ref: "UserAnswer.user", many: true }),
     createdAt: (0, import_fields.timestamp)({
       defaultValue: { kind: "now" }
     }),
@@ -58,8 +59,96 @@ var User = (0, import_core.list)({
 });
 var User_default = User;
 
+// schemas/Topic.ts
+var import_core2 = require("@keystone-6/core");
+var import_access2 = require("@keystone-6/core/access");
+var import_fields2 = require("@keystone-6/core/fields");
+var Topic = (0, import_core2.list)({
+  access: import_access2.allowAll,
+  fields: {
+    slug: (0, import_fields2.text)({ validation: { isRequired: true }, isIndexed: "unique" }),
+    title: (0, import_fields2.text)({ validation: { isRequired: true } }),
+    description: (0, import_fields2.text)({}),
+    questions: (0, import_fields2.relationship)({
+      ref: "TopicQuestion.topic",
+      many: true,
+      ui: {
+        createView: { fieldMode: "edit" },
+        itemView: { fieldMode: "edit" }
+      }
+    }),
+    tags: (0, import_fields2.relationship)({ ref: "Tag", many: true }),
+    createdAt: (0, import_fields2.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields2.timestamp)({
+      defaultValue: { kind: "now" }
+    })
+  }
+});
+var Topic_default = Topic;
+
+// schemas/TopicQuestion.ts
+var import_core3 = require("@keystone-6/core");
+var import_access3 = require("@keystone-6/core/access");
+var import_fields3 = require("@keystone-6/core/fields");
+var TopicQuestion = (0, import_core3.list)({
+  access: import_access3.allowAll,
+  fields: {
+    topic: (0, import_fields3.relationship)({ ref: "Topic.questions", many: false }),
+    title: (0, import_fields3.text)({ validation: { isRequired: true } }),
+    text: (0, import_fields3.text)({ validation: { isRequired: true } }),
+    order: (0, import_fields3.integer)({ defaultValue: 1 }),
+    createdAt: (0, import_fields3.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields3.timestamp)({
+      defaultValue: { kind: "now" }
+    })
+  }
+});
+var TopicQuestion_default = TopicQuestion;
+
+// schemas/Tag.ts
+var import_core4 = require("@keystone-6/core");
+var import_access4 = require("@keystone-6/core/access");
+var import_fields4 = require("@keystone-6/core/fields");
+var Tag = (0, import_core4.list)({
+  access: import_access4.allowAll,
+  fields: {
+    name: (0, import_fields4.text)({ validation: { isRequired: true }, isIndexed: "unique" }),
+    createdAt: (0, import_fields4.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields4.timestamp)({
+      defaultValue: { kind: "now" }
+    })
+  }
+});
+var Tag_default = Tag;
+
+// schemas/UserAnswer.ts
+var import_core5 = require("@keystone-6/core");
+var import_access5 = require("@keystone-6/core/access");
+var import_fields5 = require("@keystone-6/core/fields");
+var UserAnswer = (0, import_core5.list)({
+  access: import_access5.allowAll,
+  fields: {
+    user: (0, import_fields5.relationship)({ ref: "User.topicAnswers", many: false }),
+    question: (0, import_fields5.relationship)({ ref: "TopicQuestion", many: false }),
+    answer: (0, import_fields5.text)({}),
+    createdAt: (0, import_fields5.timestamp)({
+      defaultValue: { kind: "now" }
+    }),
+    updatedAt: (0, import_fields5.timestamp)({
+      defaultValue: { kind: "now" }
+    })
+  }
+});
+var UserAnswer_default = UserAnswer;
+
 // schemas/index.ts
-var schemas_default = { User: User_default };
+var schemas_default = { User: User_default, Topic: Topic_default, TopicQuestion: TopicQuestion_default, Tag: Tag_default, UserAnswer: UserAnswer_default };
 
 // schema.ts
 var lists = schemas_default;
@@ -101,7 +190,7 @@ var session = (0, import_session.statelessSessions)({
 var import_dotenv = __toESM(require("dotenv"));
 import_dotenv.default.config();
 var keystone_default = withAuth(
-  (0, import_core2.config)({
+  (0, import_core6.config)({
     db: {
       // we're using sqlite for the fastest startup experience
       //   for more information on what database might be appropriate for you
