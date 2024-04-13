@@ -10,22 +10,6 @@ const config: CodegenConfig = {
     "./src/gql/": {
       preset: "client",
     },
-    "./__generated__/server.ts": {
-      plugins: [
-        "typescript",
-        "typescript-operations",
-        "typescript-graphql-request",
-      ],
-      config: {
-        dedupeFragments: true,
-        exposeDocument: true,
-        exposeQueryKeys: true,
-        exposeMutationKeys: true,
-        legacyMode: false,
-        addInfiniteQuery: true,
-        pureMagicComment: true,
-      },
-    },
   },
 };
 
