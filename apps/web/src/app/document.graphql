@@ -21,3 +21,22 @@
 # mutation logout {
 #   logoutUser
 # }
+
+mutation login($email: String!, $password: String!) {
+  authenticateUserWithPassword(email: $email, password: $password) {
+    ... on UserAuthenticationWithPasswordSuccess {
+      user: item {
+        id
+        email
+      }
+      sessionToken
+    }
+    ... on UserAuthenticationWithPasswordFailure {
+      message
+    }
+  }
+}
+
+mutation logout {
+  endSession
+}

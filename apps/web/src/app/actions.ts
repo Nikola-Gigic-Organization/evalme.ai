@@ -1,54 +1,23 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { signIn } from "@/lib/auth";
+import { AuthError } from "next-auth";
 
-import { apolloClient } from "@/lib";
-import { LoginDocument, LogoutDocument } from "@/gql/graphql";
-
-export type LoginData = {
-  email: string;
-  password: string;
-};
-
-export const loginAction = async (
-  loginData: LoginData,
-): Promise<{ error: string }> => {
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
   try {
-    const { email, password } = loginData;
-
-    const { data } = await apolloClient.mutate({
-      mutation: LoginDocument,
-      variables: {
-        email,
-        password,
-      },
-    });
-
-    if (data?.loginUser?.token) {
-      cookies().set("token", data?.loginUser?.token, {
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-        path: "/",
-      });
-
-      return { error: "" };
-    } else {
-      console.error("No token");
-
-      return { error: "No token" };
+    await signIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials.";
+        default:
+          return "Something went wrong.";
+      }
     }
-  } catch (error: any) {
-    return { error: error.graphQLErrors.at(0).message };
+    throw error;
   }
-};
-
-export const logoutAction = async () => {
-  const { data } = await apolloClient.mutate({
-    mutation: LogoutDocument,
-  });
-
-  if (data?.logoutUser) {
-    cookies().delete("token");
-  } else {
-    console.error("No token");
-  }
-};
+}

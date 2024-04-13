@@ -1,37 +1,16 @@
 "use client";
 
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useFormState, useFormStatus } from "react-dom";
+import { authenticate } from "@/app/actions";
 
-import { LoginData } from "../actions";
+export default function LoginForm() {
+  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 
-const LoginForm: React.FC<{
-  loginAction: (loginData: LoginData) => Promise<{ error: string }>;
-}> = ({ loginAction }) => {
-  const [error, setError] = React.useState("");
-
-  const { register } = useForm<LoginData>();
-
-  const handleSubmit = async (formData: FormData) => {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    const { error } = await loginAction({ email, password });
-    setError(error);
-
-    console.log(error);
-  };
   return (
-    <form
-      action={handleSubmit}
-      className="flex flex-col items-center justify-center"
-    >
-      <input type="email" placeholder="Email" {...register("email")} />
-      <input type="password" placeholder="Password" {...register("password")} />
+    <form action={dispatch}>
+      <input required type="email" name="email" id="email" />
+      <input required type="password" name="password" id="password" />
       <button type="submit">Login</button>
-      {error && <p className="text-red-500">{error}</p>}
     </form>
   );
-};
-
-export default LoginForm;
+}
