@@ -1,8 +1,5 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import NextAuth from "next-auth";
 import { authConfig } from "@/lib/auth.config";
-import { auth } from "@/lib/auth";
 
 export default NextAuth(authConfig).auth;
 
