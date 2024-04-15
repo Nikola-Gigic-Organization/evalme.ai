@@ -45,13 +45,6 @@ export const submitQuestion = async (
   const openAIAnswer = await mockOpenAIAnswerFetch({});
 
   if (errors.length === 0) {
-    // const user = await apolloClient.query({
-    //   query: CheckAuthDocument,
-    // });
-
-    // console.log("user", user.data?.meUser);
-
-    // if (user.data?.meUser?.user?.id) {
     await apolloClient.mutate({
       mutation: CreateUserAnswerDocument,
       variables: {
@@ -71,7 +64,6 @@ export const submitQuestion = async (
       },
     });
   }
-  // }
 
   return {
     openAIAnswer,
