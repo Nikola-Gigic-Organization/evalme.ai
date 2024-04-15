@@ -1,14 +1,15 @@
 "use client";
 
-import { FC, useState, useRef } from "react";
+import { FC, useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import { Topic } from "@/gql/graphql";
 import { match } from "ts-pattern";
 import InterviewAnswer from "./interview-answer";
 import { submitQuestion } from "../actions";
-import { QuestionFormProps } from "../types";
+import { QuestionFormProps, QuestionFormState } from "../types";
 import ErrorsComponent from "./errors-component";
+import PreviewResults from "./preview-results";
 
 interface QuestionsFormProps {
   topic?: DeepPartial<Topic> | null;
@@ -26,15 +27,23 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
   const [userAnswerValue, setUserAnswerValue] = useState("");
   const [topicActiveQuestionIndex, setTopicActiveQuestionIndex] = useState(0);
   const [errors, setErrors] = useState<Array<{ message: string }>>([]);
-  const [showAnswer, setShowAnswer] = useState(false);
   const [activeAnswer, setActiveAnswer] = useState("");
+  const [questionFormState, setQuestionFormState] = useState<QuestionFormState>(
+    QuestionFormState.PendingAnswer,
+  );
   const topicQuestionsLength = topic?.questions?.length || 0;
   const topicActiveQuestion = topic?.questions?.at(topicActiveQuestionIndex);
+  const isLastQuestion = topicActiveQuestionIndex === topicQuestionsLength - 1;
 
   const onSubmit = async (data: FormData) => {
-    if (showAnswer) {
+    if (questionFormState === QuestionFormState.Finished) {
+      setQuestionFormState(QuestionFormState.PreviewResults);
+      return;
+    }
+
+    if (questionFormState === QuestionFormState.Answered) {
       setTopicActiveQuestionIndex((prev) => prev + 1);
-      setShowAnswer(false);
+      setQuestionFormState(QuestionFormState.PendingAnswer);
       return;
     }
 
@@ -45,21 +54,31 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
     const res = await submitQuestion(data);
     if (res.errors.length === 0) {
       setActiveAnswer(res.openAIAnswer);
-      setShowAnswer(true);
+      setQuestionFormState(QuestionFormState.Answered);
       setUserAnswerValue("");
       setErrors([]);
       reset();
+
+      if (isLastQuestion) {
+        setQuestionFormState(QuestionFormState.Finished);
+        return;
+      }
     } else {
       setErrors(res.errors);
     }
   };
 
   return (
-    <form className="w-md flex flex-col space-y-8" action={onSubmit}>
-      <div className="relative aspect-square w-full">
+    <form className="w-lg flex h-full flex-col space-y-8" action={onSubmit}>
+      <div className="relative h-full w-full">
         <div className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col flex-col justify-between space-y-2 overflow-scroll border border-black bg-white p-4">
-          {match(showAnswer)
-            .with(true, () => <InterviewAnswer answer={activeAnswer} />)
+          {match(questionFormState)
+            .with(
+              QuestionFormState.Answered,
+              QuestionFormState.Finished,
+              () => <InterviewAnswer answer={activeAnswer} />,
+            )
+            .with(QuestionFormState.PreviewResults, () => <PreviewResults />)
             .otherwise(() => (
               <>
                 <div>
@@ -104,9 +123,26 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
             </div>
             <div className="absolute right-1 top-1 h-full w-full bg-black" />
           </div>
-          <div className="group relative h-11 w-20">
+          <div className="group relative h-11 w-24">
             <button className="absolute bottom-1 left-1 z-10 h-full w-full border border-black bg-white p-2 transition-all duration-300 active:bg-gray-300 group-hover:bottom-2 group-hover:left-2">
-              {showAnswer ? "Next" : "Submit"}
+              {match({ questionFormState })
+                .with(
+                  { questionFormState: QuestionFormState.PendingAnswer },
+                  () => "Submit",
+                )
+                .with(
+                  { questionFormState: QuestionFormState.Answered },
+                  () => "Next",
+                )
+                .with(
+                  { questionFormState: QuestionFormState.Finished },
+                  () => "Preview",
+                )
+                .with(
+                  { questionFormState: QuestionFormState.PreviewResults },
+                  () => "Save PDF",
+                )
+                .run()}
             </button>
             <div className="absolute right-1 top-1 h-full w-full bg-black transition-all duration-300 group-hover:right-2 group-hover:top-2" />
           </div>

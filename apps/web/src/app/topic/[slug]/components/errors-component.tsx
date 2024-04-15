@@ -17,7 +17,7 @@ export default function ErrorsComponent({
 
   return (
     <div className="relative h-24 w-full">
-      <div className="absolute bottom-2 left-2 z-10 flex h-full w-full justify-between overflow-hidden border border-black bg-white px-4 py-2">
+      <div className="absolute bottom-2 left-2 z-10 flex h-full w-full justify-between overflow-hidden overflow-y-auto border border-black bg-white px-4 py-2">
         <div className="flex w-full flex-col space-y-2">
           <div className="flex w-full items-center justify-between">
             <span className="font-bold text-rose-500">Error: </span>

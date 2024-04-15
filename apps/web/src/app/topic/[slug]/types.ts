@@ -16,3 +16,10 @@ export const questionFormSchema = z.object({
       `Answer must be at least ${MIN_ANSWER_LENGTH} characters long.`,
     ),
 });
+
+export enum QuestionFormState {
+  PendingAnswer,
+  Answered,
+  Finished,
+  PreviewResults,
+}
