@@ -38,8 +38,11 @@ class ExtendedApolloClient {
   >(options: QueryOptions<TVariables, T>): Promise<ApolloQueryResult<T>> {
     try {
       const isBuild = process.env.NEXT_PUBLIC_BUILD_MODE;
-      const session = await auth();
-      const token = isBuild ? "" : session?.user?.id;
+      let token = "";
+      if (!isBuild) {
+        const session = await auth();
+        token = session?.user?.id ?? "";
+      }
       this.client.setLink(
         createHttpLink({
           uri: "http://127.0.0.1:3001/api/graphql",
