@@ -8,6 +8,7 @@ import {
   timestamp,
   virtual,
 } from "@keystone-6/core/fields";
+import { getSessionOrFail } from "../lib";
 
 const TopicQuestion: ListConfig<Lists.TopicQuestion.TypeInfo> = list({
   access: allowAll,
@@ -16,6 +17,15 @@ const TopicQuestion: ListConfig<Lists.TopicQuestion.TypeInfo> = list({
     title: text({ validation: { isRequired: true } }),
     text: text({ validation: { isRequired: true } }),
     order: integer({ defaultValue: 1 }),
+    viewerAnswer: virtual({
+      field: graphql.field({
+        type: graphql.String,
+        resolve: (item, args, context) => {
+          const userId = getSessionOrFail(context);
+          return "Not implemented";
+        },
+      }),
+    }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

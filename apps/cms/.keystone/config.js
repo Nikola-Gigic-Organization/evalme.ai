@@ -92,6 +92,19 @@ var Topic_default = Topic;
 var import_core3 = require("@keystone-6/core");
 var import_access3 = require("@keystone-6/core/access");
 var import_fields3 = require("@keystone-6/core/fields");
+
+// lib/getSessionOrFail.ts
+var getSessionOrFail = (context) => {
+  const authorizationHeader = context.req?.headers.authorization;
+  const userId = authorizationHeader?.split("JWT ").at(-1);
+  if (!userId) {
+    throw new Error("No user ID found in session");
+  }
+  return userId;
+};
+var getSessionOrFail_default = getSessionOrFail;
+
+// schemas/TopicQuestion.ts
 var TopicQuestion = (0, import_core3.list)({
   access: import_access3.allowAll,
   fields: {
@@ -99,6 +112,15 @@ var TopicQuestion = (0, import_core3.list)({
     title: (0, import_fields3.text)({ validation: { isRequired: true } }),
     text: (0, import_fields3.text)({ validation: { isRequired: true } }),
     order: (0, import_fields3.integer)({ defaultValue: 1 }),
+    viewerAnswer: (0, import_fields3.virtual)({
+      field: import_core3.graphql.field({
+        type: import_core3.graphql.String,
+        resolve: (item, args, context) => {
+          const userId = getSessionOrFail_default(context);
+          return "Not implemented";
+        }
+      })
+    }),
     createdAt: (0, import_fields3.timestamp)({
       defaultValue: { kind: "now" }
     }),

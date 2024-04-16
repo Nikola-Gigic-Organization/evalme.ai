@@ -10,6 +10,7 @@ import {
   OperationVariables,
 } from "@apollo/client";
 import { cookies } from "next/headers";
+import { auth } from "./auth";
 
 class ExtendedApolloClient {
   private client: ApolloClient<NormalizedCacheObject>;
@@ -37,7 +38,8 @@ class ExtendedApolloClient {
   >(options: QueryOptions<TVariables, T>): Promise<ApolloQueryResult<T>> {
     try {
       const isBuild = process.env.NEXT_PUBLIC_BUILD_MODE;
-      const token = isBuild ? "" : cookies().get("token")?.value;
+      const session = await auth();
+      const token = isBuild ? "" : session?.user?.id;
       this.client.setLink(
         createHttpLink({
           uri: "http://127.0.0.1:3001/api/graphql",

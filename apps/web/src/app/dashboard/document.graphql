@@ -8,6 +8,7 @@ query GetAllTopics {
       id
       title
       text
+      viewerAnswer
     }
     tags {
       id

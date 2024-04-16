@@ -253,6 +253,7 @@ type TopicQuestion {
   title: String
   text: String
   order: Int
+  viewerAnswer: String
   createdAt: DateTime
   updatedAt: DateTime
 }
