@@ -152,6 +152,7 @@ type Topic {
   description: String
   questions(where: TopicQuestionWhereInput! = {}, orderBy: [TopicQuestionOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TopicQuestionWhereUniqueInput): [TopicQuestion!]
   questionsCount(where: TopicQuestionWhereInput! = {}): Int
+  viewerAnsweredQuestionsCount: Int
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
@@ -253,7 +254,7 @@ type TopicQuestion {
   title: String
   text: String
   order: Int
-  viewerAnswer: String
+  viewerAnswer: UserAnswer
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -379,7 +380,8 @@ type UserAnswer {
   id: ID!
   user: User
   question: TopicQuestion
-  answer: String
+  userAnswer: String
+  openAIAnswer: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -395,14 +397,16 @@ input UserAnswerWhereInput {
   id: IDFilter
   user: UserWhereInput
   question: TopicQuestionWhereInput
-  answer: StringFilter
+  userAnswer: StringFilter
+  openAIAnswer: StringFilter
   createdAt: DateTimeNullableFilter
   updatedAt: DateTimeNullableFilter
 }
 
 input UserAnswerOrderByInput {
   id: OrderDirection
-  answer: OrderDirection
+  userAnswer: OrderDirection
+  openAIAnswer: OrderDirection
   createdAt: OrderDirection
   updatedAt: OrderDirection
 }
@@ -410,7 +414,8 @@ input UserAnswerOrderByInput {
 input UserAnswerUpdateInput {
   user: UserRelateToOneForUpdateInput
   question: TopicQuestionRelateToOneForUpdateInput
-  answer: String
+  userAnswer: String
+  openAIAnswer: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -435,7 +440,8 @@ input UserAnswerUpdateArgs {
 input UserAnswerCreateInput {
   user: UserRelateToOneForCreateInput
   question: TopicQuestionRelateToOneForCreateInput
-  answer: String
+  userAnswer: String
+  openAIAnswer: String
   createdAt: DateTime
   updatedAt: DateTime
 }

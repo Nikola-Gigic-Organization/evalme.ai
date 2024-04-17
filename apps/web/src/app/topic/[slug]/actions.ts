@@ -54,7 +54,8 @@ export const submitQuestion = async (
               id: "clutood670000xrn8tbb6ggfa",
             },
           },
-          answer: data?.userAnswer ?? "",
+          userAnswer: data?.userAnswer ?? "",
+          openAIAnswer,
           question: {
             connect: {
               id: data?.questionId,

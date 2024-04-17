@@ -621,6 +621,7 @@ export type Topic = {
   tagsCount?: Maybe<Scalars['Int']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  viewerAnsweredQuestionsCount?: Maybe<Scalars['Int']['output']>;
 };
 
 
@@ -679,7 +680,7 @@ export type TopicQuestion = {
   title?: Maybe<Scalars['String']['output']>;
   topic?: Maybe<Topic>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  viewerAnswer?: Maybe<Scalars['String']['output']>;
+  viewerAnswer?: Maybe<UserAnswer>;
 };
 
 export type TopicQuestionCreateInput = {
@@ -833,20 +834,22 @@ export type UserTopicAnswersCountArgs = {
 
 export type UserAnswer = {
   __typename?: 'UserAnswer';
-  answer?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
+  openAIAnswer?: Maybe<Scalars['String']['output']>;
   question?: Maybe<TopicQuestion>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
+  userAnswer?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserAnswerCreateInput = {
-  answer?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  openAIAnswer?: InputMaybe<Scalars['String']['input']>;
   question?: InputMaybe<TopicQuestionRelateToOneForCreateInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user?: InputMaybe<UserRelateToOneForCreateInput>;
+  userAnswer?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserAnswerManyRelationFilter = {
@@ -856,10 +859,11 @@ export type UserAnswerManyRelationFilter = {
 };
 
 export type UserAnswerOrderByInput = {
-  answer?: InputMaybe<OrderDirection>;
   createdAt?: InputMaybe<OrderDirection>;
   id?: InputMaybe<OrderDirection>;
+  openAIAnswer?: InputMaybe<OrderDirection>;
   updatedAt?: InputMaybe<OrderDirection>;
+  userAnswer?: InputMaybe<OrderDirection>;
 };
 
 export type UserAnswerRelateToManyForCreateInput = {
@@ -880,23 +884,25 @@ export type UserAnswerUpdateArgs = {
 };
 
 export type UserAnswerUpdateInput = {
-  answer?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  openAIAnswer?: InputMaybe<Scalars['String']['input']>;
   question?: InputMaybe<TopicQuestionRelateToOneForUpdateInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user?: InputMaybe<UserRelateToOneForUpdateInput>;
+  userAnswer?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserAnswerWhereInput = {
   AND?: InputMaybe<Array<UserAnswerWhereInput>>;
   NOT?: InputMaybe<Array<UserAnswerWhereInput>>;
   OR?: InputMaybe<Array<UserAnswerWhereInput>>;
-  answer?: InputMaybe<StringFilter>;
   createdAt?: InputMaybe<DateTimeNullableFilter>;
   id?: InputMaybe<IdFilter>;
+  openAIAnswer?: InputMaybe<StringFilter>;
   question?: InputMaybe<TopicQuestionWhereInput>;
   updatedAt?: InputMaybe<DateTimeNullableFilter>;
   user?: InputMaybe<UserWhereInput>;
+  userAnswer?: InputMaybe<StringFilter>;
 };
 
 export type UserAnswerWhereUniqueInput = {
@@ -978,7 +984,7 @@ export type UserWhereUniqueInput = {
 export type GetAllTopicsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllTopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename?: 'Topic', id: string, slug?: string | null, title?: string | null, description?: string | null, questions?: Array<{ __typename?: 'TopicQuestion', id: string, title?: string | null, text?: string | null, viewerAnswer?: string | null }> | null, tags?: Array<{ __typename?: 'Tag', id: string, name?: string | null }> | null }> | null };
+export type GetAllTopicsQuery = { __typename?: 'Query', topics?: Array<{ __typename?: 'Topic', id: string, slug?: string | null, title?: string | null, description?: string | null, questions?: Array<{ __typename?: 'TopicQuestion', id: string, title?: string | null, text?: string | null, viewerAnswer?: { __typename?: 'UserAnswer', id: string, userAnswer?: string | null, openAIAnswer?: string | null } | null }> | null, tags?: Array<{ __typename?: 'Tag', id: string, name?: string | null }> | null }> | null };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -998,7 +1004,7 @@ export type GetTopicBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetTopicBySlugQuery = { __typename?: 'Query', topic?: { __typename?: 'Topic', id: string, title?: string | null, questionsCount?: number | null, questions?: Array<{ __typename?: 'TopicQuestion', id: string, title?: string | null, text?: string | null }> | null } | null };
+export type GetTopicBySlugQuery = { __typename?: 'Query', topic?: { __typename?: 'Topic', id: string, title?: string | null, questionsCount?: number | null, viewerAnsweredQuestionsCount?: number | null, questions?: Array<{ __typename?: 'TopicQuestion', id: string, title?: string | null, text?: string | null, viewerAnswer?: { __typename?: 'UserAnswer', id: string, userAnswer?: string | null, openAIAnswer?: string | null } | null }> | null } | null };
 
 export type CreateUserAnswerMutationVariables = Exact<{
   data: UserAnswerCreateInput;
@@ -1008,8 +1014,8 @@ export type CreateUserAnswerMutationVariables = Exact<{
 export type CreateUserAnswerMutation = { __typename?: 'Mutation', createUserAnswer?: { __typename?: 'UserAnswer', id: string } | null };
 
 
-export const GetAllTopicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllTopics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"viewerAnswer"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllTopicsQuery, GetAllTopicsQueryVariables>;
+export const GetAllTopicsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllTopics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topics"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"viewerAnswer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userAnswer"}},{"kind":"Field","name":{"kind":"Name","value":"openAIAnswer"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllTopicsQuery, GetAllTopicsQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authenticateUserWithPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAuthenticationWithPasswordSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"user"},"name":{"kind":"Name","value":"item"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sessionToken"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserAuthenticationWithPasswordFailure"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const LogoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"logout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"endSession"}}]}}]} as unknown as DocumentNode<LogoutMutation, LogoutMutationVariables>;
-export const GetTopicBySlugDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTopicBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topic"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"order"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"text"}}]}},{"kind":"Field","name":{"kind":"Name","value":"questionsCount"}}]}}]}}]} as unknown as DocumentNode<GetTopicBySlugQuery, GetTopicBySlugQueryVariables>;
+export const GetTopicBySlugDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTopicBySlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"topic"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"questions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"order"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"viewerAnswer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userAnswer"}},{"kind":"Field","name":{"kind":"Name","value":"openAIAnswer"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"questionsCount"}},{"kind":"Field","name":{"kind":"Name","value":"viewerAnsweredQuestionsCount"}}]}}]}}]} as unknown as DocumentNode<GetTopicBySlugQuery, GetTopicBySlugQueryVariables>;
 export const CreateUserAnswerDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserAnswer"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserAnswerCreateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserAnswer"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateUserAnswerMutation, CreateUserAnswerMutationVariables>;

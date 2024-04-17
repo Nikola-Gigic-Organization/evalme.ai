@@ -1,15 +1,21 @@
 "use client";
 
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, useState, useRef } from "react";
+import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
 import { Topic } from "@/gql/graphql";
 import { match } from "ts-pattern";
+import { apolloClient } from "@/lib";
+import { usePDF } from "react-to-pdf";
 import InterviewAnswer from "./interview-answer";
 import { submitQuestion } from "../actions";
 import { QuestionFormProps, QuestionFormState } from "../types";
 import ErrorsComponent from "./errors-component";
-import PreviewResults from "./preview-results";
+
+const PreviewResults = dynamic(() => import("./preview-results"), {
+  ssr: false,
+});
 
 interface QuestionsFormProps {
   topic?: DeepPartial<Topic> | null;
@@ -17,6 +23,14 @@ interface QuestionsFormProps {
 
 const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // const previewResultsRef = useRef<HTMLDivElement>(null);
+  const { toPDF, targetRef: previewResultsRef } = usePDF({
+    filename: `${topic?.title}-interview-results.pdf`,
+    method: "save",
+    canvas: {
+      mimeType: "image/jpeg",
+    },
+  });
 
   const { register, reset } = useForm<QuestionFormProps>({
     defaultValues: {
@@ -25,17 +39,43 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
   });
 
   const [userAnswerValue, setUserAnswerValue] = useState("");
-  const [topicActiveQuestionIndex, setTopicActiveQuestionIndex] = useState(0);
+  const [topicActiveQuestionIndex, setTopicActiveQuestionIndex] = useState(
+    () => {
+      if (!topic?.viewerAnsweredQuestionsCount) {
+        return 0;
+      }
+
+      return Math.min(
+        Math.max(topic.viewerAnsweredQuestionsCount, 0),
+        (topic.questions?.length ?? 1) - 1,
+      );
+    },
+  );
   const [errors, setErrors] = useState<Array<{ message: string }>>([]);
   const [activeAnswer, setActiveAnswer] = useState("");
   const [questionFormState, setQuestionFormState] = useState<QuestionFormState>(
-    QuestionFormState.PendingAnswer,
+    () => {
+      if (topic?.viewerAnsweredQuestionsCount === topic?.questions?.length) {
+        return QuestionFormState.PreviewResults;
+      }
+
+      return QuestionFormState.PendingAnswer;
+    },
   );
   const topicQuestionsLength = topic?.questions?.length || 0;
   const topicActiveQuestion = topic?.questions?.at(topicActiveQuestionIndex);
   const isLastQuestion = topicActiveQuestionIndex === topicQuestionsLength - 1;
 
   const onSubmit = async (data: FormData) => {
+    if (questionFormState === QuestionFormState.PreviewResults) {
+      if (!previewResultsRef.current) {
+        return;
+      }
+      toPDF();
+
+      return;
+    }
+
     if (questionFormState === QuestionFormState.Finished) {
       setQuestionFormState(QuestionFormState.PreviewResults);
       return;
@@ -68,20 +108,42 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
     }
   };
 
+  const viewerAnswers = topic?.questions?.map((question) => {
+    const data = {
+      ...question?.viewerAnswer,
+      question: {
+        title: question?.title ?? "",
+      },
+    };
+    return data;
+  });
+
   return (
     <form className="w-lg flex h-full flex-col space-y-8" action={onSubmit}>
       <div className="relative h-full w-full">
-        <div className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col flex-col justify-between space-y-2 overflow-scroll border border-black bg-white p-4">
+        <div className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col flex-col justify-between space-y-2 overflow-scroll border border-black bg-white">
           {match(questionFormState)
             .with(
               QuestionFormState.Answered,
               QuestionFormState.Finished,
-              () => <InterviewAnswer answer={activeAnswer} />,
+              () => (
+                <InterviewAnswer
+                  answer={
+                    topicActiveQuestion?.viewerAnswer?.openAIAnswer ??
+                    activeAnswer
+                  }
+                />
+              ),
             )
-            .with(QuestionFormState.PreviewResults, () => <PreviewResults />)
+            .with(QuestionFormState.PreviewResults, () => (
+              <PreviewResults
+                innerRef={previewResultsRef}
+                viewerAnswers={viewerAnswers}
+              />
+            ))
             .otherwise(() => (
               <>
-                <div>
+                <div className="p-4">
                   <h2 className="text-xl font-bold">
                     {topicActiveQuestion?.title}
                   </h2>
@@ -89,7 +151,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
                     {topicActiveQuestion?.text}
                   </p>
                 </div>
-                <div className="flex w-full flex-col space-y-2">
+                <div className="flex w-full flex-col space-y-2 p-4">
                   <textarea
                     {...register("userAnswer")}
                     ref={inputRef}

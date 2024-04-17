@@ -6,8 +6,14 @@ query GetTopicBySlug($slug: String!) {
       id
       title
       text
+      viewerAnswer {
+        id
+        userAnswer
+        openAIAnswer
+      }
     }
     questionsCount
+    viewerAnsweredQuestionsCount
   }
 }
 

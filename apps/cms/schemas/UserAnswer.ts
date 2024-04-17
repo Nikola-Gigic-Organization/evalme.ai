@@ -13,7 +13,8 @@ const UserAnswer: ListConfig<Lists.UserAnswer.TypeInfo> = list({
   fields: {
     user: relationship({ ref: "User.topicAnswers", many: false }),
     question: relationship({ ref: "TopicQuestion", many: false }),
-    answer: text({}),
+    userAnswer: text({}),
+    openAIAnswer: text({}),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
     }),

@@ -7,6 +7,7 @@ import {
   timestamp,
   virtual,
 } from "@keystone-6/core/fields";
+import { getSessionOrFail } from "../lib";
 
 const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
   access: allowAll,
@@ -20,6 +21,33 @@ const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
       ui: {
         createView: { fieldMode: "edit" },
         itemView: { fieldMode: "edit" },
+      },
+    }),
+    viewerAnsweredQuestionsCount: virtual({
+      field: (lists) =>
+        graphql.field({
+          type: graphql.Int,
+          resolve: async (item, args, context) => {
+            const userId = getSessionOrFail(context);
+            const userAnswers = await context.prisma.userAnswer.count({
+              where: {
+                userId,
+                question: {
+                  topicId: item.id,
+                },
+              },
+            });
+
+            return userAnswers;
+          },
+        }),
+      ui: {
+        listView: {
+          fieldMode: "hidden",
+        },
+        itemView: {
+          fieldMode: "hidden",
+        },
       },
     }),
     tags: relationship({ ref: "Tag", many: true }),

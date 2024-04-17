@@ -63,6 +63,19 @@ var User_default = User;
 var import_core2 = require("@keystone-6/core");
 var import_access2 = require("@keystone-6/core/access");
 var import_fields2 = require("@keystone-6/core/fields");
+
+// lib/getSessionOrFail.ts
+var getSessionOrFail = (context) => {
+  const authorizationHeader = context.req?.headers.authorization;
+  const userId = authorizationHeader?.split("JWT ").at(-1);
+  if (!userId) {
+    throw new Error("No user ID found in session");
+  }
+  return userId;
+};
+var getSessionOrFail_default = getSessionOrFail;
+
+// schemas/Topic.ts
 var Topic = (0, import_core2.list)({
   access: import_access2.allowAll,
   fields: {
@@ -75,6 +88,31 @@ var Topic = (0, import_core2.list)({
       ui: {
         createView: { fieldMode: "edit" },
         itemView: { fieldMode: "edit" }
+      }
+    }),
+    viewerAnsweredQuestionsCount: (0, import_fields2.virtual)({
+      field: (lists2) => import_core2.graphql.field({
+        type: import_core2.graphql.Int,
+        resolve: async (item, args, context) => {
+          const userId = getSessionOrFail_default(context);
+          const userAnswers = await context.prisma.userAnswer.count({
+            where: {
+              userId,
+              question: {
+                topicId: item.id
+              }
+            }
+          });
+          return userAnswers;
+        }
+      }),
+      ui: {
+        listView: {
+          fieldMode: "hidden"
+        },
+        itemView: {
+          fieldMode: "hidden"
+        }
       }
     }),
     tags: (0, import_fields2.relationship)({ ref: "Tag", many: true }),
@@ -92,19 +130,6 @@ var Topic_default = Topic;
 var import_core3 = require("@keystone-6/core");
 var import_access3 = require("@keystone-6/core/access");
 var import_fields3 = require("@keystone-6/core/fields");
-
-// lib/getSessionOrFail.ts
-var getSessionOrFail = (context) => {
-  const authorizationHeader = context.req?.headers.authorization;
-  const userId = authorizationHeader?.split("JWT ").at(-1);
-  if (!userId) {
-    throw new Error("No user ID found in session");
-  }
-  return userId;
-};
-var getSessionOrFail_default = getSessionOrFail;
-
-// schemas/TopicQuestion.ts
 var TopicQuestion = (0, import_core3.list)({
   access: import_access3.allowAll,
   fields: {
@@ -113,13 +138,27 @@ var TopicQuestion = (0, import_core3.list)({
     text: (0, import_fields3.text)({ validation: { isRequired: true } }),
     order: (0, import_fields3.integer)({ defaultValue: 1 }),
     viewerAnswer: (0, import_fields3.virtual)({
-      field: import_core3.graphql.field({
-        type: import_core3.graphql.String,
-        resolve: (item, args, context) => {
+      field: (lists2) => import_core3.graphql.field({
+        type: lists2.UserAnswer.types.output,
+        resolve: async (item, args, context) => {
           const userId = getSessionOrFail_default(context);
-          return "Not implemented";
+          const viewerAnswer = await context.prisma.userAnswer.findFirst({
+            where: {
+              userId,
+              questionId: item.id
+            }
+          });
+          return viewerAnswer;
         }
-      })
+      }),
+      ui: {
+        listView: {
+          fieldMode: "hidden"
+        },
+        itemView: {
+          fieldMode: "hidden"
+        }
+      }
     }),
     createdAt: (0, import_fields3.timestamp)({
       defaultValue: { kind: "now" }
@@ -158,7 +197,8 @@ var UserAnswer = (0, import_core5.list)({
   fields: {
     user: (0, import_fields5.relationship)({ ref: "User.topicAnswers", many: false }),
     question: (0, import_fields5.relationship)({ ref: "TopicQuestion", many: false }),
-    answer: (0, import_fields5.text)({}),
+    userAnswer: (0, import_fields5.text)({}),
+    openAIAnswer: (0, import_fields5.text)({}),
     createdAt: (0, import_fields5.timestamp)({
       defaultValue: { kind: "now" }
     }),

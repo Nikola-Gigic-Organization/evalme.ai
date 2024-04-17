@@ -44,7 +44,10 @@ const InterviewAnswer: FC<{ answer: string }> = ({ answer }) => {
   }, [answer, animatedAnswer]);
   return (
     <div>
-      <Markup content={animatedAnswer} className="block whitespace-pre-line" />
+      <Markup
+        content={animatedAnswer}
+        className="block whitespace-pre-line p-4"
+      />
     </div>
   );
 };

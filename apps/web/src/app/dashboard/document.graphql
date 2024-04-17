@@ -8,7 +8,11 @@ query GetAllTopics {
       id
       title
       text
-      viewerAnswer
+      viewerAnswer {
+        id
+        userAnswer
+        openAIAnswer
+      }
     }
     tags {
       id

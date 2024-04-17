@@ -25,7 +25,7 @@ class ExtendedApolloClient {
       cache: new InMemoryCache(),
       defaultOptions: {
         query: {
-          fetchPolicy: "network-only",
+          fetchPolicy: "no-cache",
         },
       },
     });
@@ -88,7 +88,10 @@ class ExtendedApolloClient {
       throw error; // You can also choose to handle errors differently here
     }
   }
-  // You can add more custom methods or properties as needed
+
+  async resetStore() {
+    return this.client.resetStore();
+  }
 }
 const extendedClient = new ExtendedApolloClient();
 
