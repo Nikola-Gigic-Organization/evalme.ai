@@ -2,8 +2,7 @@
 import React from "react";
 import { Topic } from "@/gql/graphql";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-
-import TopicCard from "./topic-card";
+import { TopicCard } from "@repo/ui";
 
 const TopicsForm: React.FC<{ topics?: DeepPartial<Topic | null>[] | null }> = ({
   topics,
@@ -19,8 +18,8 @@ const TopicsForm: React.FC<{ topics?: DeepPartial<Topic | null>[] | null }> = ({
   }, [topics, search]);
 
   return (
-    <div className="flex w-full flex-col items-start gap-y-4 lg:w-[1024px]">
-      <div className="flex w-full items-end justify-between px-2.5">
+    <div className="grid w-full max-w-lg grid-cols-1 place-items-center gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="col-span-4 flex w-full items-end justify-between px-2.5">
         <div className="flex h-10 w-56 space-x-2 border-b border-black">
           <MagnifyingGlassIcon className="h-full w-5 text-black" />
           <input
@@ -49,20 +48,18 @@ const TopicsForm: React.FC<{ topics?: DeepPartial<Topic | null>[] | null }> = ({
           )}
         </div>
       </div>
-      <div className="grid w-full grid-cols-1 place-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filteredTopics?.map((topic) => (
-          <TopicCard
-            key={topic?.title}
-            slug={topic?.slug}
-            title={topic?.title}
-            description={topic?.description}
-            tags={topic?.tags?.map((tag) => tag?.name ?? "")}
-            viewerAnsweredAllQuestions={Boolean(
-              topic?.viewerAnsweredAllQuestions,
-            )}
-          />
-        ))}
-      </div>
+      {filteredTopics?.map((topic) => (
+        <TopicCard
+          key={topic?.title}
+          slug={topic?.slug}
+          title={topic?.title}
+          description={topic?.description}
+          tags={topic?.tags?.map((tag) => tag?.name ?? "")}
+          viewerAnsweredAllQuestions={Boolean(
+            topic?.viewerAnsweredAllQuestions,
+          )}
+        />
+      ))}
     </div>
   );
 };

@@ -2,6 +2,7 @@ import "./globals.css";
 import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import { Titillium_Web } from "next/font/google";
+import clsx from "clsx";
 
 const fontFamily = Titillium_Web({
   subsets: ["latin"],
@@ -20,7 +21,7 @@ export default async function RootLayout({
 }): Promise<JSX.Element> {
   return (
     <html lang="en">
-      <body className={fontFamily.className}>{children}</body>
+      <body className={clsx([fontFamily.className])}>{children}</body>
     </html>
   );
 }
