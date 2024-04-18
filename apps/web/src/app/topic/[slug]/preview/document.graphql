@@ -1,0 +1,17 @@
+query GetViewerTopicAnswers($slug: String!) {
+  topic(where: { slug: $slug }) {
+    id
+    title
+    viewerAnsweredQuestions {
+      id
+      question {
+        id
+        title
+        text
+        order
+      }
+      userAnswer
+      openAIAnswer
+    }
+  }
+}

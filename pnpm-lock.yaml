@@ -83,9 +83,6 @@ importers:
       interweave:
         specifier: ^13.1.0
         version: 13.1.0(react@18.2.0)
-      jspdf:
-        specifier: ^2.5.1
-        version: 2.5.1
       next:
         specifier: ^14.1.4
         version: 14.2.0(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)

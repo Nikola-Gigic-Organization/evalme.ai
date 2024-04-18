@@ -90,6 +90,31 @@ var Topic = (0, import_core2.list)({
         itemView: { fieldMode: "edit" }
       }
     }),
+    viewerAnsweredQuestions: (0, import_fields2.virtual)({
+      field: (lists2) => import_core2.graphql.field({
+        type: import_core2.graphql.list(lists2.UserAnswer.types.output),
+        resolve: async (item, args, context) => {
+          const userId = getSessionOrFail_default(context);
+          const userAnswers = await context.prisma.userAnswer.findMany({
+            where: {
+              userId,
+              question: {
+                topicId: item.id
+              }
+            }
+          });
+          return userAnswers;
+        }
+      }),
+      ui: {
+        listView: {
+          fieldMode: "hidden"
+        },
+        itemView: {
+          fieldMode: "hidden"
+        }
+      }
+    }),
     viewerAnsweredQuestionsCount: (0, import_fields2.virtual)({
       field: (lists2) => import_core2.graphql.field({
         type: import_core2.graphql.Int,
@@ -124,7 +149,6 @@ var Topic = (0, import_core2.list)({
     })
   }
 });
-var Topic_default = Topic;
 
 // schemas/TopicQuestion.ts
 var import_core3 = require("@keystone-6/core");
@@ -168,7 +192,6 @@ var TopicQuestion = (0, import_core3.list)({
     })
   }
 });
-var TopicQuestion_default = TopicQuestion;
 
 // schemas/Tag.ts
 var import_core4 = require("@keystone-6/core");
@@ -210,7 +233,7 @@ var UserAnswer = (0, import_core5.list)({
 var UserAnswer_default = UserAnswer;
 
 // schemas/index.ts
-var schemas_default = { User: User_default, Topic: Topic_default, TopicQuestion: TopicQuestion_default, Tag: Tag_default, UserAnswer: UserAnswer_default };
+var schemas_default = { User: User_default, Topic, TopicQuestion, Tag: Tag_default, UserAnswer: UserAnswer_default };
 
 // schema.ts
 var lists = schemas_default;

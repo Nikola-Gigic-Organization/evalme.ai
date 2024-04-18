@@ -9,7 +9,7 @@ import {
 } from "@keystone-6/core/fields";
 import { getSessionOrFail } from "../lib";
 
-const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
+export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
   access: allowAll,
   fields: {
     slug: text({ validation: { isRequired: true }, isIndexed: "unique" }),
@@ -21,6 +21,33 @@ const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
       ui: {
         createView: { fieldMode: "edit" },
         itemView: { fieldMode: "edit" },
+      },
+    }),
+    viewerAnsweredQuestions: virtual({
+      field: (lists) =>
+        graphql.field({
+          type: graphql.list(lists.UserAnswer.types.output),
+          resolve: async (item, args, context) => {
+            const userId = getSessionOrFail(context);
+            const userAnswers = await context.prisma.userAnswer.findMany({
+              where: {
+                userId,
+                question: {
+                  topicId: item.id,
+                },
+              },
+            });
+
+            return userAnswers;
+          },
+        }),
+      ui: {
+        listView: {
+          fieldMode: "hidden",
+        },
+        itemView: {
+          fieldMode: "hidden",
+        },
       },
     }),
     viewerAnsweredQuestionsCount: virtual({
@@ -59,5 +86,3 @@ const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
     }),
   },
 });
-
-export default Topic;

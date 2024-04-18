@@ -21,5 +21,4 @@ export enum QuestionFormState {
   PendingAnswer,
   Answered,
   Finished,
-  PreviewResults,
 }

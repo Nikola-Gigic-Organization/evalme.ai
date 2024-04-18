@@ -80,17 +80,15 @@ class ExtendedApolloClient {
         }),
       );
 
-      return await this.client.mutate<TData, TVariables>(options);
+      return await this.client.mutate<TData, TVariables>({
+        ...options,
+      });
     } catch (error: any) {
       if (error?.networkError?.cause?.code === "ECONNREFUSED") return error;
 
       console.error("Custom error handling: ", error);
       throw error; // You can also choose to handle errors differently here
     }
-  }
-
-  async resetStore() {
-    return this.client.resetStore();
   }
 }
 const extendedClient = new ExtendedApolloClient();

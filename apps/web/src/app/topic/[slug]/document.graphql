@@ -2,6 +2,7 @@ query GetTopicBySlug($slug: String!) {
   topic(where: { slug: $slug }) {
     id
     title
+    slug
     questions(orderBy: { order: asc }) {
       id
       title

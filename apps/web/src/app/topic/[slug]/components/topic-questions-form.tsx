@@ -1,36 +1,23 @@
 "use client";
 
 import { FC, useState, useRef } from "react";
-import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { Topic } from "@/gql/graphql";
 import { match } from "ts-pattern";
-import { apolloClient } from "@/lib";
-import { usePDF } from "react-to-pdf";
 import InterviewAnswer from "./interview-answer";
 import { submitQuestion } from "../actions";
 import { QuestionFormProps, QuestionFormState } from "../types";
 import ErrorsComponent from "./errors-component";
-
-const PreviewResults = dynamic(() => import("./preview-results"), {
-  ssr: false,
-});
 
 interface QuestionsFormProps {
   topic?: DeepPartial<Topic> | null;
 }
 
 const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
+  const router = useRouter();
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  // const previewResultsRef = useRef<HTMLDivElement>(null);
-  const { toPDF, targetRef: previewResultsRef } = usePDF({
-    filename: `${topic?.title}-interview-results.pdf`,
-    method: "save",
-    canvas: {
-      mimeType: "image/jpeg",
-    },
-  });
 
   const { register, reset } = useForm<QuestionFormProps>({
     defaultValues: {
@@ -56,7 +43,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
   const [questionFormState, setQuestionFormState] = useState<QuestionFormState>(
     () => {
       if (topic?.viewerAnsweredQuestionsCount === topic?.questions?.length) {
-        return QuestionFormState.PreviewResults;
+        return QuestionFormState.Finished;
       }
 
       return QuestionFormState.PendingAnswer;
@@ -67,17 +54,8 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
   const isLastQuestion = topicActiveQuestionIndex === topicQuestionsLength - 1;
 
   const onSubmit = async (data: FormData) => {
-    if (questionFormState === QuestionFormState.PreviewResults) {
-      if (!previewResultsRef.current) {
-        return;
-      }
-      toPDF();
-
-      return;
-    }
-
     if (questionFormState === QuestionFormState.Finished) {
-      setQuestionFormState(QuestionFormState.PreviewResults);
+      router.push(`/topic/${topic?.slug}/preview`);
       return;
     }
 
@@ -135,12 +113,6 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
                 />
               ),
             )
-            .with(QuestionFormState.PreviewResults, () => (
-              <PreviewResults
-                innerRef={previewResultsRef}
-                viewerAnswers={viewerAnswers}
-              />
-            ))
             .otherwise(() => (
               <>
                 <div className="p-4">
@@ -199,10 +171,6 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
                 .with(
                   { questionFormState: QuestionFormState.Finished },
                   () => "Preview",
-                )
-                .with(
-                  { questionFormState: QuestionFormState.PreviewResults },
-                  () => "Save PDF",
                 )
                 .run()}
             </button>

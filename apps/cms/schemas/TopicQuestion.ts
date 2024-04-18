@@ -11,7 +11,7 @@ import {
 } from "@keystone-6/core/fields";
 import { getSessionOrFail } from "../lib";
 
-const TopicQuestion: ListConfig<Lists.TopicQuestion.TypeInfo> = list({
+export const TopicQuestion: ListConfig<Lists.TopicQuestion.TypeInfo> = list({
   access: allowAll,
   fields: {
     topic: relationship({ ref: "Topic.questions", many: false }),
@@ -51,5 +51,3 @@ const TopicQuestion: ListConfig<Lists.TopicQuestion.TypeInfo> = list({
     }),
   },
 });
-
-export default TopicQuestion;
