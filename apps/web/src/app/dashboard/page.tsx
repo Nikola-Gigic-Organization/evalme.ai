@@ -2,10 +2,10 @@ import { TopicCard } from "@repo/ui";
 
 export default function Page() {
   return (
-    <div className="w-full py-8 pl-8">
+    <div className="w-full space-y-16 py-8 pl-8">
       <div className="flex w-full flex-col">
         <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
-          Completed Topics
+          Recently Started Topics
         </span>
         <div className="flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
           <TopicCard
@@ -22,6 +22,13 @@ export default function Page() {
             tags={["JavaScript", "Library"]}
             viewerAnsweredAllQuestions={true}
           />
+        </div>
+      </div>
+      <div className="flex w-full flex-col">
+        <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
+          Completed Topics
+        </span>
+        <div className="flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
           <TopicCard
             slug="tailwind-css"
             title="Tailwind CSS"
