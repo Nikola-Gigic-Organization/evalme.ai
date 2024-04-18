@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Titillium_Web } from "next/font/google";
 import clsx from "clsx";
 import { NavBar } from "./components";
+import { auth } from "@/lib/auth";
 
 const fontFamily = Titillium_Web({
   subsets: ["latin"],
@@ -20,10 +21,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }): Promise<JSX.Element> {
+  const session = await auth();
   return (
     <html lang="en">
       <body className={clsx([fontFamily.className])}>
-        <NavBar />
+        {session && <NavBar />}
         {children}
       </body>
     </html>

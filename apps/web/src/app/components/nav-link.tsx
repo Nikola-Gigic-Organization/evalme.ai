@@ -12,7 +12,7 @@ type NavLinkProps = {
 
 const NavLink = ({ href, children }: NavLinkProps) => {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = pathname.endsWith(href);
   return (
     <Link href={href}>
       <span className="space-x-1 text-xl font-bold lowercase">

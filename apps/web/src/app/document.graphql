@@ -1,27 +1,3 @@
-# query checkAuth {
-#   meUser {
-#     user {
-#       id
-#       email
-#     }
-#     exp
-#   }
-# }
-
-# mutation login($email: String!, $password: String!) {
-#   loginUser(email: $email, password: $password) {
-#     user {
-#       email
-#     }
-#     exp
-#     token
-#   }
-# }
-
-# mutation logout {
-#   logoutUser
-# }
-
 mutation login($email: String!, $password: String!) {
   authenticateUserWithPassword(email: $email, password: $password) {
     ... on UserAuthenticationWithPasswordSuccess {
