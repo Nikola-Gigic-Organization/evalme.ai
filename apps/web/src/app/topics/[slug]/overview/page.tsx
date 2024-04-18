@@ -19,7 +19,7 @@ export default async function Page({ params }: PageProps) {
     variables: { slug },
   });
   return (
-    <div className="h-app flex w-full justify-center px-4 py-10">
+    <div className="h-app flex w-full justify-center px-4 pt-20 sm:py-10">
       <OverviewResults
         topicTitle={data.topic?.title}
         viewerAnswers={data.topic?.viewerAnsweredQuestions}

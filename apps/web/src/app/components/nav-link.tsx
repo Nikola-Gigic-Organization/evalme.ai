@@ -1,20 +1,21 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import React, { forwardRef } from "react";
+import Link, { LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 type NavLinkProps = {
   href: string;
+  onClick?: LinkProps["onClick"];
   children: React.ReactNode;
 };
 
-const NavLink = ({ href, children }: NavLinkProps) => {
+const NavLink = ({ href, onClick, children }: NavLinkProps) => {
   const pathname = usePathname();
   const isActive = pathname.endsWith(href);
   return (
-    <Link href={href}>
+    <Link onClick={onClick} href={href}>
       <span className="space-x-1 text-xl font-bold lowercase">
         <span>/</span>
         <span

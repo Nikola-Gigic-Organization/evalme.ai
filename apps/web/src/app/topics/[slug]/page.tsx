@@ -21,7 +21,7 @@ export default async function Page({
   const topic = data.topic;
 
   return (
-    <div className="h-app flex w-full justify-center px-4 py-10">
+    <div className="h-app flex w-full justify-center px-4 pt-20 sm:py-10">
       <QuestionForm topic={topic} />
     </div>
   );
