@@ -7,6 +7,7 @@ export interface TopicCardProps {
   title?: Topic["title"];
   description?: Topic["description"];
   tags?: string[];
+  viewerAnsweredAllQuestions?: boolean;
 }
 
 const TopicCard: React.FC<TopicCardProps> = ({
@@ -14,9 +15,13 @@ const TopicCard: React.FC<TopicCardProps> = ({
   title,
   description,
   tags,
+  viewerAnsweredAllQuestions,
 }) => {
+  const href = viewerAnsweredAllQuestions
+    ? `/topic/${slug}/overview`
+    : `/topic/${slug}`;
   return (
-    <Link className="group relative h-56 sm:w-56" href={`/topic/${slug}`}>
+    <Link className="group relative h-56 sm:w-56" href={href}>
       <div className="absolute bottom-1 left-1 z-20 flex h-full w-full origin-bottom-left flex-col justify-between space-y-4 border border-black bg-white p-4 transition-all duration-300 ease-in-out group-hover:bottom-2 group-hover:left-2">
         <div className="overflow-y-hidden">
           <span className="text-lg font-bold">{title}</span>
@@ -37,7 +42,5 @@ const TopicCard: React.FC<TopicCardProps> = ({
     </Link>
   );
 };
-
-TopicCard.displayName = "TopicCard";
 
 export default TopicCard;

@@ -77,6 +77,38 @@ export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
         },
       },
     }),
+    viewerAnsweredAllQuestions: virtual({
+      field: (lists) =>
+        graphql.field({
+          type: graphql.Boolean,
+          resolve: async (item, args, context) => {
+            const userId = getSessionOrFail(context);
+            const userAnswers = await context.prisma.userAnswer.findMany({
+              where: {
+                userId,
+                question: {
+                  topicId: item.id,
+                },
+              },
+            });
+            const questionsCount = await context.prisma.topicQuestion.count({
+              where: {
+                topicId: item.id,
+              },
+            });
+
+            return userAnswers.length === questionsCount;
+          },
+        }),
+      ui: {
+        listView: {
+          fieldMode: "hidden",
+        },
+        itemView: {
+          fieldMode: "hidden",
+        },
+      },
+    }),
     tags: relationship({ ref: "Tag", many: true }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },

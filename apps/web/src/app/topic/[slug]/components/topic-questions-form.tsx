@@ -55,7 +55,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
 
   const onSubmit = async (data: FormData) => {
     if (questionFormState === QuestionFormState.Finished) {
-      router.push(`/topic/${topic?.slug}/preview`);
+      router.push(`/topic/${topic?.slug}/overview`);
       return;
     }
 
@@ -170,7 +170,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
                 )
                 .with(
                   { questionFormState: QuestionFormState.Finished },
-                  () => "Preview",
+                  () => "Overview",
                 )
                 .run()}
             </button>

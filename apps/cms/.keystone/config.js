@@ -140,6 +140,36 @@ var Topic = (0, import_core2.list)({
         }
       }
     }),
+    viewerAnsweredAllQuestions: (0, import_fields2.virtual)({
+      field: (lists2) => import_core2.graphql.field({
+        type: import_core2.graphql.Boolean,
+        resolve: async (item, args, context) => {
+          const userId = getSessionOrFail_default(context);
+          const userAnswers = await context.prisma.userAnswer.findMany({
+            where: {
+              userId,
+              question: {
+                topicId: item.id
+              }
+            }
+          });
+          const questionsCount = await context.prisma.topicQuestion.count({
+            where: {
+              topicId: item.id
+            }
+          });
+          return userAnswers.length === questionsCount;
+        }
+      }),
+      ui: {
+        listView: {
+          fieldMode: "hidden"
+        },
+        itemView: {
+          fieldMode: "hidden"
+        }
+      }
+    }),
     tags: (0, import_fields2.relationship)({ ref: "Tag", many: true }),
     createdAt: (0, import_fields2.timestamp)({
       defaultValue: { kind: "now" }

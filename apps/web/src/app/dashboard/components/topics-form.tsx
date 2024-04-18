@@ -57,6 +57,9 @@ const TopicsForm: React.FC<{ topics?: DeepPartial<Topic | null>[] | null }> = ({
             title={topic?.title}
             description={topic?.description}
             tags={topic?.tags?.map((tag) => tag?.name ?? "")}
+            viewerAnsweredAllQuestions={Boolean(
+              topic?.viewerAnsweredAllQuestions,
+            )}
           />
         ))}
       </div>

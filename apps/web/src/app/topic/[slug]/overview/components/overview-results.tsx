@@ -3,12 +3,15 @@ import { Markup } from "interweave";
 import { usePDF } from "react-to-pdf";
 import { UserAnswer } from "@/gql/graphql";
 
-type PreviewResultsProps = {
+type OverviewResultsProps = {
   topicTitle?: string | null;
   viewerAnswers?: DeepPartial<UserAnswer | null>[] | null;
 };
 
-const PreviewResults = ({ topicTitle, viewerAnswers }: PreviewResultsProps) => {
+const OverviewResults = ({
+  topicTitle,
+  viewerAnswers,
+}: OverviewResultsProps) => {
   const { toPDF, targetRef } = usePDF({
     filename: topicTitle
       ? `EvalMe-${topicTitle}-interview-results.pdf`
@@ -67,4 +70,4 @@ const PreviewResults = ({ topicTitle, viewerAnswers }: PreviewResultsProps) => {
   );
 };
 
-export default PreviewResults;
+export default OverviewResults;

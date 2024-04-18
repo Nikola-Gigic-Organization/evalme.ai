@@ -4,6 +4,7 @@ query GetAllTopics {
     slug
     title
     description
+    viewerAnsweredAllQuestions
     questions {
       id
       title

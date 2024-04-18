@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { apolloClient } from "@/lib";
 import { GetViewerTopicAnswersDocument } from "@/gql/graphql";
 
-const PreviewResults = dynamic(() => import("./components/preview-results"), {
+const OverviewResults = dynamic(() => import("./components/overview-results"), {
   ssr: false,
 });
 
@@ -20,7 +20,7 @@ export default async function Page({ params }: PageProps) {
   });
   return (
     <div className="flex h-screen w-full justify-center px-4 py-10">
-      <PreviewResults
+      <OverviewResults
         topicTitle={data.topic?.title}
         viewerAnswers={data.topic?.viewerAnsweredQuestions}
       />
