@@ -97,7 +97,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
   });
 
   return (
-    <form className="w-lg flex h-full flex-col space-y-8" action={onSubmit}>
+    <form className="w-lg flex flex-col space-y-8" action={onSubmit}>
       <div className="relative h-full w-full">
         <div className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col flex-col justify-between space-y-2 overflow-scroll border border-black bg-white">
           {match(questionFormState)
