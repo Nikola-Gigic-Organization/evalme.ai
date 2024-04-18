@@ -18,8 +18,8 @@ const TopicCard: React.FC<TopicCardProps> = ({
   viewerAnsweredAllQuestions,
 }) => {
   const href = viewerAnsweredAllQuestions
-    ? `/topic/${slug}/overview`
-    : `/topic/${slug}`;
+    ? `/topics/${slug}/overview`
+    : `/topics/${slug}`;
   return (
     <Link className="group relative h-56 sm:w-56" href={href}>
       <div className="absolute bottom-1 left-1 z-20 flex h-full w-full origin-bottom-left flex-col justify-between space-y-4 border border-black bg-white p-4 transition-all duration-300 ease-in-out group-hover:bottom-2 group-hover:left-2">

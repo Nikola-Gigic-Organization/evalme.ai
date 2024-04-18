@@ -55,7 +55,7 @@ const QuestionsForm: FC<QuestionsFormProps> = ({ topic }) => {
 
   const onSubmit = async (data: FormData) => {
     if (questionFormState === QuestionFormState.Finished) {
-      router.push(`/topic/${topic?.slug}/overview`);
+      router.push(`/topics/${topic?.slug}/overview`);
       return;
     }
 
