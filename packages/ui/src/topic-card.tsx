@@ -21,7 +21,7 @@ const TopicCard: React.FC<TopicCardProps> = ({
     ? `/topics/${slug}/overview`
     : `/topics/${slug}`;
   return (
-    <div className="group relative min-h-56 min-w-56">
+    <div className="group relative min-h-60 min-w-60">
       <Link href={href}>
         <div className="absolute bottom-1 left-1 z-10 flex h-full w-full flex-col justify-between space-y-2 border border-black bg-white p-2 transition-all duration-300 group-hover:bottom-2 group-hover:left-2">
           <div className="space-y-2 overflow-y-hidden">

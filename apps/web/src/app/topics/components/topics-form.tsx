@@ -18,7 +18,7 @@ const TopicsForm: React.FC<{ topics?: DeepPartial<Topic | null>[] | null }> = ({
   }, [topics, search]);
 
   return (
-    <div className="grid w-full max-w-lg grid-cols-1 place-items-center gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="w-full space-y-2">
       <div className="col-span-4 flex w-full items-end justify-between px-2.5">
         <div className="flex h-10 w-56 space-x-2 border-b border-black">
           <MagnifyingGlassIcon className="h-full w-5 text-black" />
@@ -48,18 +48,21 @@ const TopicsForm: React.FC<{ topics?: DeepPartial<Topic | null>[] | null }> = ({
           )}
         </div>
       </div>
-      {filteredTopics?.map((topic) => (
-        <TopicCard
-          key={topic?.title}
-          slug={topic?.slug}
-          title={topic?.title}
-          description={topic?.description}
-          tags={topic?.tags?.map((tag) => tag?.name ?? "")}
-          viewerAnsweredAllQuestions={Boolean(
-            topic?.viewerAnsweredAllQuestions,
-          )}
-        />
-      ))}
+      <div className="flex w-full flex-1 flex-wrap gap-8 border-l-4 border-t-4 border-black p-4">
+        {filteredTopics?.map((topic) => (
+          <TopicCard
+            key={topic?.title}
+            slug={topic?.slug}
+            title={topic?.title}
+            description={topic?.description}
+            tags={topic?.tags?.map((tag) => tag?.name ?? "")}
+            viewerAnsweredAllQuestions={Boolean(
+              topic?.viewerAnsweredAllQuestions,
+            )}
+          />
+        ))}
+        {filteredTopics?.length === 0 && <div className="h-60 w-60" />}
+      </div>
     </div>
   );
 };

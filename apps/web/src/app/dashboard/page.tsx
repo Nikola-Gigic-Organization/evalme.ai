@@ -1,9 +1,8 @@
 import { TopicCard } from "@repo/ui";
-import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="flex h-screen w-full py-8 pl-8">
+    <div className="w-full py-8 pl-8">
       <div className="flex w-full flex-col">
         <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
           Completed Topics

@@ -8,7 +8,7 @@ export default async function Page(): Promise<JSX.Element> {
   });
 
   return (
-    <div className="flex justify-center">
+    <div className="p-8">
       <TopicsForm topics={data?.topics} />
     </div>
   );
