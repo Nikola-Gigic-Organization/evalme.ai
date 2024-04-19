@@ -23,7 +23,7 @@ const NavBar = () => {
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(false)}
-          className="absolute right-1.5 top-2 z-30 border border-black p-1 text-black"
+          className="absolute right-1.5 top-2 z-30 border border-black bg-white p-1 text-black"
         >
           <XMarkIcon className="h-6 w-6" />
         </button>
@@ -36,6 +36,12 @@ const NavBar = () => {
         </button>
         <ul className="flex h-full w-full flex-col justify-between p-4">
           <ol className="flex flex-col space-y-2">
+            <li className="pb-2">
+              <span className="text-2xl">
+                <span className="font-bold text-rose-500">Eval.</span>
+                <span className="font-bold">Me</span>
+              </span>
+            </li>
             <li>
               <NavLink onClick={onLinkClick} href="/dashboard">
                 Dashboard
@@ -55,7 +61,7 @@ const NavBar = () => {
           <li>
             <button
               type="submit"
-              className="group space-x-1 text-xl font-bold lowercase"
+              className="group space-x-0.5 font-bold uppercase"
             >
               <span>/</span>
               <span className="transition-colors duration-150 group-hover:text-rose-500">
@@ -66,7 +72,11 @@ const NavBar = () => {
         </ul>
       </form>
       <form action={onSignOut} className="hidden w-full px-8 py-4 sm:block">
-        <ul className="flex justify-between border-b border-black pb-2">
+        <ul className="flex items-end justify-between border-b border-black pb-2">
+          <span className="cursor-default text-3xl">
+            <span className="font-bold text-rose-500">Eval.</span>
+            <span className="font-bold">Me</span>
+          </span>
           <ol className="flex space-x-8">
             <li>
               <NavLink href="/dashboard">Dashboard</NavLink>
@@ -81,7 +91,7 @@ const NavBar = () => {
           <li>
             <button
               type="submit"
-              className="group space-x-1 text-xl font-bold lowercase"
+              className="group space-x-0.5 font-bold uppercase"
             >
               <span>/</span>
               <span className="transition-colors duration-150 group-hover:text-rose-500">

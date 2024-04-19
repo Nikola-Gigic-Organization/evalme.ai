@@ -16,7 +16,7 @@ const NavLink = ({ href, onClick, children }: NavLinkProps) => {
   const isActive = pathname.endsWith(href);
   return (
     <Link onClick={onClick} href={href}>
-      <span className="space-x-1 text-xl font-bold lowercase">
+      <span className="space-x-0.5 font-bold uppercase">
         <span>/</span>
         <span
           className={clsx([
