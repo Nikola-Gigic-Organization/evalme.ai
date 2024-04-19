@@ -5,6 +5,8 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 import NavLink from "./nav-link";
 import { onSignOut } from "@/app/actions";
+import LogoutButton from "./logout-button";
+import LogoLink from "./logo-link";
 
 const NavBar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -37,10 +39,7 @@ const NavBar = () => {
         <ul className="flex h-full w-full flex-col justify-between p-4">
           <ol className="flex flex-col space-y-2">
             <li className="pb-2">
-              <span className="text-2xl font-bold">
-                <span className="text-rose-500">Eval</span>
-                <span>Me</span>
-              </span>
+              <LogoLink />
             </li>
             <li>
               <NavLink onClick={onLinkClick} href="/dashboard">
@@ -59,24 +58,13 @@ const NavBar = () => {
             </li>
           </ol>
           <li>
-            <button
-              type="submit"
-              className="group space-x-0.5 font-bold uppercase"
-            >
-              <span>/</span>
-              <span className="transition-colors duration-150 group-hover:text-rose-500">
-                logout
-              </span>
-            </button>
+            <LogoutButton />
           </li>
         </ul>
       </form>
       <form action={onSignOut} className="hidden w-full px-8 py-4 sm:block">
         <ul className="flex items-end justify-between border-b border-black pb-2">
-          <span className="cursor-default text-3xl font-bold">
-            <span className="text-rose-500">Eval</span>
-            <span>Me</span>
-          </span>
+          <LogoLink />
           <ol className="flex space-x-8">
             <li>
               <NavLink href="/dashboard">Dashboard</NavLink>
@@ -89,15 +77,7 @@ const NavBar = () => {
             </li>
           </ol>
           <li>
-            <button
-              type="submit"
-              className="group space-x-0.5 font-bold uppercase"
-            >
-              <span>/</span>
-              <span className="transition-colors duration-150 group-hover:text-rose-500">
-                logout
-              </span>
-            </button>
+            <LogoutButton />
           </li>
         </ul>
       </form>
