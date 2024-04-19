@@ -42,17 +42,17 @@ const NavBar = () => {
               <LogoLink />
             </li>
             <li>
-              <NavLink onClick={onLinkClick} href="/dashboard">
+              <NavLink onLinkClick={onLinkClick} href="/dashboard">
                 Dashboard
               </NavLink>
             </li>
             <li>
-              <NavLink onClick={onLinkClick} href="/topics">
+              <NavLink onLinkClick={onLinkClick} href="/topics">
                 topics
               </NavLink>
             </li>
             <li>
-              <NavLink onClick={onLinkClick} href="/profile">
+              <NavLink onLinkClick={onLinkClick} href="/profile">
                 profile
               </NavLink>
             </li>
