@@ -37,9 +37,9 @@ const NavBar = () => {
         <ul className="flex h-full w-full flex-col justify-between p-4">
           <ol className="flex flex-col space-y-2">
             <li className="pb-2">
-              <span className="text-2xl">
-                <span className="font-bold text-rose-500">Eval.</span>
-                <span className="font-bold">Me</span>
+              <span className="text-2xl font-bold">
+                <span className="text-rose-500">Eval</span>
+                <span>Me</span>
               </span>
             </li>
             <li>
@@ -73,9 +73,9 @@ const NavBar = () => {
       </form>
       <form action={onSignOut} className="hidden w-full px-8 py-4 sm:block">
         <ul className="flex items-end justify-between border-b border-black pb-2">
-          <span className="cursor-default text-3xl">
-            <span className="font-bold text-rose-500">Eval.</span>
-            <span className="font-bold">Me</span>
+          <span className="cursor-default text-3xl font-bold">
+            <span className="text-rose-500">Eval</span>
+            <span>Me</span>
           </span>
           <ol className="flex space-x-8">
             <li>
