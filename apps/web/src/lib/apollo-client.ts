@@ -11,6 +11,9 @@ import {
 } from "@apollo/client";
 import { cookies } from "next/headers";
 import { auth } from "./auth";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 class ExtendedApolloClient {
   private client: ApolloClient<NormalizedCacheObject>;
@@ -19,7 +22,7 @@ class ExtendedApolloClient {
     this.client = new ApolloClient({
       ssrMode: true,
       link: createHttpLink({
-        uri: "http://127.0.0.1:3001/api/graphql",
+        uri: `${process.env.CMS_API_URL}/api/graphql`,
         credentials: "same-origin",
       }),
       cache: new InMemoryCache(),
@@ -45,7 +48,7 @@ class ExtendedApolloClient {
       }
       this.client.setLink(
         createHttpLink({
-          uri: "http://127.0.0.1:3001/api/graphql",
+          uri: `${process.env.CMS_API_URL}/api/graphql`,
           credentials: "same-origin",
           headers: {
             Authorization: `JWT ${token}`,
@@ -72,7 +75,7 @@ class ExtendedApolloClient {
       const token = isBuild ? "" : cookies().get("token")?.value;
       this.client.setLink(
         createHttpLink({
-          uri: "http://127.0.0.1:3001/api/graphql",
+          uri: `${process.env.CMS_API_URL}/api/graphql`,
           credentials: "same-origin",
           headers: {
             Authorization: `JWT ${token}`,
