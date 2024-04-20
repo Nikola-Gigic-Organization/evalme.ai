@@ -1,0 +1,12 @@
+query GetUser($where: UserWhereUniqueInput!) {
+  user(where: $where) {
+    id
+    email
+  }
+}
+
+mutation UpdateUser($where: UserWhereUniqueInput!, $data: UserUpdateInput!) {
+  updateUser(where: $where, data: $data) {
+    id
+  }
+}

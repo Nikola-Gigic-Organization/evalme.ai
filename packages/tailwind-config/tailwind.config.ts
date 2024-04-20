@@ -30,7 +30,7 @@ const config: Omit<Config, "content"> = {
       spacing: screenSizes,
       maxWidth: screenSizes,
       height: {
-        app: "calc(100vh - 70px)",
+        app: "calc(100vh - 76px)",
       },
     },
     screens: screenSizes,
