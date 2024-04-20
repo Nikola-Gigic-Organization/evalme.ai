@@ -41,7 +41,7 @@ export default async function Page() {
     <div className="h-app flex justify-center p-8">
       <form
         action={onSave}
-        className="w-lg mt-10 flex flex-col space-y-8 sm:mt-0"
+        className="w-lg mt-10 flex flex-col gap-y-8 sm:mt-0"
       >
         <div className="relative h-40 w-full sm:h-28 sm:pt-0">
           <div className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col justify-between border border-black bg-white p-4">
