@@ -1,15 +1,19 @@
 import { apolloClient } from "@/lib";
-import { GetAllTopicsDocument } from "@/gql/graphql";
+import { GetAllTopicsDocument, GetAllTagsDocument } from "@/gql/graphql";
 import { TopicsForm } from "./components";
 
 export default async function Page(): Promise<JSX.Element> {
-  const { data } = await apolloClient.query({
+  const { data: topicsData } = await apolloClient.query({
     query: GetAllTopicsDocument,
+  });
+
+  const { data: tagsData } = await apolloClient.query({
+    query: GetAllTagsDocument,
   });
 
   return (
     <div className="p-8">
-      <TopicsForm topics={data?.topics} />
+      <TopicsForm topics={topicsData?.topics} tags={tagsData.tags} />
     </div>
   );
 }

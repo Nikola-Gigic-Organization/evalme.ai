@@ -21,3 +21,10 @@ query GetAllTopics {
     }
   }
 }
+
+query GetAllTags {
+  tags(orderBy: { name: asc }) {
+    id
+    name
+  }
+}
