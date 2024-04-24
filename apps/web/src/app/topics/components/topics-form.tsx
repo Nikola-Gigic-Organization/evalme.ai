@@ -26,18 +26,24 @@ const TopicsForm: FC<{
       const topicTitle = topic?.title?.toLowerCase();
       const topicTags = topic?.tags?.map((tag) => tag?.name?.toLowerCase());
 
+      const filteredByTopics = topicTitle?.includes(search.toLowerCase());
+
+      if (!selectedTags.length) {
+        return filteredByTopics;
+      }
+
       const filteredByTags = selectedTags.some((tag) =>
         topicTags?.includes(tag.toLowerCase()),
       );
 
-      return topicTitle?.includes(search.toLowerCase()) && filteredByTags;
+      return filteredByTopics && filteredByTags;
     });
   }, [topics, search, selectedTags]);
 
   return (
     <div className="w-full space-y-2">
-      <div className="col-span-4 flex w-full items-end justify-between px-2.5">
-        <div className="flex w-fit space-x-8">
+      <div className="col-span-4 flex w-full items-start justify-between sm:items-end sm:px-2.5">
+        <div className="space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
           <div className="flex h-10 w-56 space-x-2 border-b border-black">
             <MagnifyingGlassIcon className="h-full w-5 text-black" />
             <input
@@ -55,7 +61,7 @@ const TopicsForm: FC<{
             setSelectedTags={setSelectedTags}
           />
         </div>
-        <div>
+        <div className="pt-2">
           {filteredTopics?.length ? (
             filteredTopics.length > 1 ? (
               <>
