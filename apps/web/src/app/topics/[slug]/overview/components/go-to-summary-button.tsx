@@ -51,7 +51,6 @@ const GoToSummaryButton = ({
   };
 
   const onClick = () => {
-    console.log(scrollableContainerRef.current?.scrollTop);
     if ((scrollableContainerRef.current?.scrollTop ?? 0) > 100) {
       goToTop();
     } else {
