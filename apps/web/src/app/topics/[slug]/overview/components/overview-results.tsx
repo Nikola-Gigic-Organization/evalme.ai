@@ -1,7 +1,10 @@
 "use client";
+import { useRef } from "react";
 import { Markup } from "interweave";
 import { usePDF } from "react-to-pdf";
+import { ChevronDoubleDownIcon } from "@heroicons/react/20/solid";
 import { UserAnswer } from "@/gql/graphql";
+import GoToSummaryButton from "./go-to-summary-button";
 
 type OverviewResultsProps = {
   topicTitle?: string | null;
@@ -12,6 +15,9 @@ const OverviewResults = ({
   topicTitle,
   viewerAnswers,
 }: OverviewResultsProps) => {
+  const topRef = useRef<HTMLDivElement>(null);
+  const summaryRef = useRef<HTMLDivElement>(null);
+  const scrollableContainerRef = useRef<HTMLDivElement>(null);
   const { toPDF, targetRef } = usePDF({
     filename: topicTitle
       ? `EvalMe-${topicTitle}-interview-results.pdf`
@@ -25,7 +31,16 @@ const OverviewResults = ({
   return (
     <div className="w-lg flex h-full flex-col space-y-8">
       <div className="relative h-full w-full">
-        <div className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col flex-col justify-between space-y-2 overflow-scroll border border-black bg-white">
+        <GoToSummaryButton
+          topRef={topRef}
+          summaryRef={summaryRef}
+          scrollableContainerRef={scrollableContainerRef}
+        />
+        <div
+          ref={scrollableContainerRef}
+          className="absolute bottom-2 left-2 z-10 flex h-full w-full flex-col flex-col justify-between space-y-2 overflow-scroll border border-black bg-white"
+        >
+          <div ref={topRef} />
           <div ref={targetRef} className="flex flex-col gap-y-8 p-4">
             {viewerAnswers?.map((answer) => {
               return (
@@ -51,6 +66,9 @@ const OverviewResults = ({
                 </div>
               );
             })}
+            <div ref={summaryRef}>
+              {/* TODO: Add summary from the AI Response */}
+            </div>
           </div>
         </div>
         <div className="absolute right-2 top-2 h-full w-full bg-black" />
