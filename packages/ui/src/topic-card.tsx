@@ -28,7 +28,7 @@ const TopicCard: React.FC<TopicCardProps> = ({
       <Link href={cardHref}>
         <div className="absolute bottom-1 left-1 z-10 flex h-full w-full flex-col justify-between space-y-2 border border-black bg-white p-2 transition-all duration-300 group-hover:bottom-2 group-hover:left-2">
           <div className="space-y-2">
-            <span className="text-lg font-bold text-black transition-colors duration-300 group-hover:text-rose-500">
+            <span className="text-xl font-bold text-black transition-colors duration-300 group-hover:text-rose-500">
               {title}
             </span>
             <p className="leading-4">{description}</p>

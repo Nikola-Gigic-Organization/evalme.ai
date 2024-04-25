@@ -5,7 +5,7 @@ export default function Page() {
     <div className="w-full space-y-16 py-8 pl-8">
       <div className="flex w-full flex-col">
         <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
-          Recently Started Topics
+          / Recently Started Topics /
         </span>
         <div className="flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
           <TopicCard
@@ -26,7 +26,7 @@ export default function Page() {
       </div>
       <div className="flex w-full flex-col">
         <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
-          Completed Topics
+          / Completed Topics /
         </span>
         <div className="flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
           <TopicCard
