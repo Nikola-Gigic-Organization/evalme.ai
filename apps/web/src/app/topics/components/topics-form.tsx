@@ -13,13 +13,15 @@ const TopicsForm: FC<{
   const params = useSearchParams();
   const tagParam = params.get("tags");
   const [search, setSearch] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    tagParam?.split(",").filter((tag) => tag !== "") || [],
-  );
+  const [selectedTags, setSelectedTags] = useState<string[]>(() => {
+    return tagParam?.split(",").filter((tag) => tag !== "") || [];
+  });
 
   const filteredTopics = useMemo(() => {
-    if (!topics) return topics;
-    if (!search && selectedTags.length === 0) {
+    if (!topics) return [];
+    const paramTags = tagParam?.split(",").filter((tag) => tag !== "") || [];
+    const tags = paramTags.length ? paramTags : selectedTags;
+    if (!search && tags.length === 0) {
       return topics;
     }
     return topics.filter((topic) => {
@@ -28,11 +30,11 @@ const TopicsForm: FC<{
 
       const filteredByTopics = topicTitle?.includes(search.toLowerCase());
 
-      if (!selectedTags.length) {
+      if (!tags.length) {
         return filteredByTopics;
       }
 
-      const filteredByTags = selectedTags.some((tag) =>
+      const filteredByTags = tags.some((tag) =>
         topicTags?.includes(tag.toLowerCase()),
       );
 

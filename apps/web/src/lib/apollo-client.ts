@@ -25,10 +25,11 @@ class ExtendedApolloClient {
         uri: `${process.env.CMS_API_URL}/api/graphql`,
         credentials: "same-origin",
       }),
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache().restore({}),
+      ssrForceFetchDelay: 100, // in milliseconds
       defaultOptions: {
         query: {
-          fetchPolicy: "network-only",
+          fetchPolicy: "cache-first",
         },
       },
     });

@@ -40,7 +40,7 @@ const TopicCard: React.FC<TopicCardProps> = ({
                 className="group relative h-6 w-24"
                 onClick={(e) => {
                   e.preventDefault();
-                  router.push("/topics?tags=" + tag);
+                  router.push(`/topics?tags=${tag}`);
                 }}
               >
                 <span className="absolute bottom-0 left-0 z-10 h-full w-full bg-indigo-500 px-2 font-extralight text-white transition-all duration-150 hover:bottom-1 hover:left-1 active:-bottom-1 active:-left-1">
