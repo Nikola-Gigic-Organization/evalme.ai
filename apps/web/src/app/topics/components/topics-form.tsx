@@ -3,7 +3,7 @@ import { useState, useMemo, FC } from "react";
 import { useSearchParams } from "next/navigation";
 import { Topic, Tag } from "@/gql/graphql";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { TopicCard } from "@repo/ui";
+import { LoadingTopicCard, TopicCard } from "@repo/ui";
 import TagsDropdown from "./tags-dropdown";
 
 const TopicsForm: FC<{
