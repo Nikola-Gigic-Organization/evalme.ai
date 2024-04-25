@@ -21,7 +21,7 @@ const TopicsForm: FC<{
     if (!topics) return [];
     const paramTags = tagParam?.split(",").filter((tag) => tag !== "") || [];
     const tags = paramTags.length ? paramTags : selectedTags;
-    if (!search && tags.length === 0) {
+    if (!search && tags?.length === 0) {
       return topics;
     }
     return topics.filter((topic) => {
@@ -30,11 +30,11 @@ const TopicsForm: FC<{
 
       const filteredByTopics = topicTitle?.includes(search.toLowerCase());
 
-      if (!tags.length) {
+      if (!tags?.length) {
         return filteredByTopics;
       }
 
-      const filteredByTags = tags.some((tag) =>
+      const filteredByTags = tags?.some((tag) =>
         topicTags?.includes(tag.toLowerCase()),
       );
 

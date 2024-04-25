@@ -13,7 +13,7 @@ export default async function Page(): Promise<JSX.Element> {
 
   return (
     <div className="p-8">
-      <TopicsForm topics={topicsData?.topics} tags={tagsData.tags} />
+      <TopicsForm topics={topicsData?.topics} tags={tagsData?.tags} />
     </div>
   );
 }
