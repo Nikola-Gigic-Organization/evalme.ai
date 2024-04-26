@@ -4,18 +4,23 @@ const sessionMaxAge = 30 * 24 * 60 * 60;
 
 export const authConfig = {
   pages: {
-    signIn: "/",
+    signIn: "/login",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      if (nextUrl.pathname === "/") return true;
+
       const isLoggedIn = !!auth?.user;
-      if (nextUrl.pathname !== "/") {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
-      }
-      return true;
+      if (isLoggedIn) return true;
+      return false;
+
+      // if (nextUrl.pathname !== "/") {
+      //   if (isLoggedIn) return true;
+      //   return false; // Redirect unauthenticated users to login page
+      // } else if (isLoggedIn) {
+      //   return Response.redirect(new URL("/dashboard", nextUrl));
+      // }
+      // return true;
     },
     session: async ({ session, token }) => {
       if (session?.user && token?.sub) {

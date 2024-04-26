@@ -5,6 +5,9 @@ import { Titillium_Web } from "next/font/google";
 import clsx from "clsx";
 import { NavBar } from "./components";
 import { auth } from "@/lib/auth";
+import LogoutButton from "./components/logout-button";
+import NavLink from "./components/nav-link";
+import LogoLink from "./components/logo-link";
 
 const fontFamily = Titillium_Web({
   subsets: ["latin"],
@@ -25,7 +28,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={clsx([fontFamily.className])}>
-        {session && <NavBar />}
+        {session ? (
+          <NavBar />
+        ) : (
+          <div className="flex w-full items-end justify-between px-8 py-4 ">
+            <LogoLink />
+            <NavLink href="/login">Login</NavLink>
+          </div>
+        )}
         {children}
       </body>
     </html>
