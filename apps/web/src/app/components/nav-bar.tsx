@@ -62,7 +62,10 @@ const NavBar = () => {
           </li>
         </ul>
       </form>
-      <form action={onSignOut} className="hidden w-full px-8 py-4 sm:block">
+      <form
+        action={onSignOut}
+        className="hidden h-16 w-full px-8 py-4 sm:block"
+      >
         <ul className="flex items-end justify-between border-b border-black pb-2">
           <ol className="flex items-end space-x-4 text-center">
             <LogoLink />

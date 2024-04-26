@@ -31,9 +31,11 @@ export default async function RootLayout({
         {session ? (
           <NavBar />
         ) : (
-          <div className="flex w-full items-end justify-between px-8 py-4 ">
-            <LogoLink />
-            <NavLink href="/login">Login</NavLink>
+          <div className="h-16 w-full px-8 py-4 sm:block">
+            <div className="flex items-end justify-between border-b border-black pb-2">
+              <LogoLink />
+              <NavLink href="/login">Login</NavLink>
+            </div>
           </div>
         )}
         {children}
