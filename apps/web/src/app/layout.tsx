@@ -5,7 +5,6 @@ import { Titillium_Web } from "next/font/google";
 import clsx from "clsx";
 import { NavBar } from "./components";
 import { auth } from "@/lib/auth";
-import LogoutButton from "./components/logout-button";
 import NavLink from "./components/nav-link";
 import LogoLink from "./components/logo-link";
 

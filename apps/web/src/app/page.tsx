@@ -1,9 +1,6 @@
-import { LoginForm } from "./components";
-
 export default async function Page(): Promise<JSX.Element> {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center">
-      {/* <LoginForm /> */}
       <div className="cursor-default text-9xl font-bold">
         <span className="text-black">Eval</span>
         <span className="text-rose-500">Me</span>
