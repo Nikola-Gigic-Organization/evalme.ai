@@ -8,7 +8,10 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
-    await signIn("credentials", formData);
+    await signIn("credentials", {
+      redirectTo: "/dashboard",
+      ...Object.fromEntries(formData),
+    });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -23,5 +26,5 @@ export async function authenticate(
 }
 
 export async function onSignOut() {
-  await signOut();
+  await signOut({ redirectTo: "/" });
 }
