@@ -51,7 +51,7 @@ export default async function Page() {
                 disabled
                 type="email"
                 placeholder={user?.email ?? ""}
-                className="border-b border-black p-1 outline-0 ring-0 placeholder:text-black disabled:bg-white"
+                className="w-56 border-b border-black p-1 outline-0 ring-0 placeholder:text-black disabled:bg-white"
               />
               <input
                 type="password"
@@ -59,7 +59,7 @@ export default async function Page() {
                 autoComplete="new-password"
                 name="password"
                 id="password"
-                className="border-b border-black p-1 outline-0 ring-0"
+                className="w-56 border-b border-black p-1 outline-0 ring-0"
               />
             </div>
           </div>
