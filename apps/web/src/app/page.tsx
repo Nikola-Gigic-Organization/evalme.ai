@@ -1,7 +1,7 @@
 "use client";
 
 import { LandingPageCard } from "./components";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useRef } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import clsx from "clsx";
 
@@ -106,7 +106,7 @@ const RefButton: React.FC<{
   const directionRef =
     direction === "down" || direction === "top" ? downFocusRef : upFocusRef;
   return (
-    <div className={clsx(["group relative h-10 w-20"])}>
+    <div className={clsx(["group relative hidden h-10 w-20 sm:block"])}>
       <button
         onClick={() =>
           directionRef?.current?.scrollIntoView({
@@ -139,7 +139,6 @@ const RefButton: React.FC<{
 };
 
 export default function Page(): JSX.Element {
-  const containerRef = useRef<HTMLDivElement>(null);
   const landingDivRef = useRef<HTMLDivElement>(null);
   const howItWorksRef = useRef<HTMLDivElement>(null);
   const everythingYouNeedRef = useRef<HTMLDivElement>(null);
@@ -262,9 +261,9 @@ export default function Page(): JSX.Element {
         </div>
         <div
           ref={everythingYouNeedRef}
-          className="sm:h-app relative flex w-full items-center justify-center p-8"
+          className="relative flex w-full items-center justify-center p-8 sm:h-screen"
         >
-          <div className="absolute left-0 top-0 flex w-full justify-center">
+          <div className="absolute left-0 top-8 flex w-full justify-center">
             <RefButton direction="up" upFocusRef={howItWorksRef} />
           </div>
           <div className="absolute bottom-8 left-0 flex w-full justify-center">
