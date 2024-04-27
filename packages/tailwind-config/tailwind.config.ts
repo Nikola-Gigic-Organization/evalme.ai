@@ -12,12 +12,15 @@ const capitalizeFirst = plugin(function ({ addUtilities }) {
 });
 
 const screenSizes = {
+  root: "0px",
   sm: "640px",
   md: "768px",
   lg: "1024px",
   xl: "1280px",
   "2xl": "1536px",
 };
+
+const heightWithoutHeader = "calc(100vh - 64px)";
 
 // We want each package to be responsible for its own content.
 const config: Omit<Config, "content"> = {
@@ -29,8 +32,11 @@ const config: Omit<Config, "content"> = {
       },
       spacing: screenSizes,
       maxWidth: screenSizes,
+      minHeight: {
+        app: heightWithoutHeader,
+      },
       height: {
-        app: "calc(100vh - 64px)",
+        app: heightWithoutHeader,
       },
     },
     screens: screenSizes,
