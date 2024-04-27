@@ -106,15 +106,7 @@ const RefButton: React.FC<{
   const directionRef =
     direction === "down" || direction === "top" ? downFocusRef : upFocusRef;
   return (
-    <div
-      className={clsx([
-        "group relative",
-        {
-          "aspect-square w-10": direction !== "top",
-          "h-10 w-20": direction === "top" && !upDirectionLook,
-        },
-      ])}
-    >
+    <div className={clsx(["group relative h-10 w-20"])}>
       <button
         onClick={() =>
           directionRef?.current?.scrollIntoView({
@@ -138,12 +130,7 @@ const RefButton: React.FC<{
               </div>
             </div>
           ) : (
-            <div>
-              <div className="relative flex flex-col">
-                <ChevronUpIcon className="animate-fade absolute -right-3 -top-2.5 h-7 w-7" />
-                <ChevronUpIcon className="animate-fade-delay animate-fade absolute -bottom-3 -right-3 h-7 w-7" />
-              </div>
-            </div>
+            <CombinedChevronUpIcon />
           ))}
       </button>
       <div className="absolute bottom-0 left-0 h-full w-full bg-black" />
