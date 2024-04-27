@@ -37,7 +37,7 @@ export default async function RootLayout({
             </div>
           </div>
         )}
-        {children}
+        <main className="h-app w-full">{children}</main>
       </body>
     </html>
   );
