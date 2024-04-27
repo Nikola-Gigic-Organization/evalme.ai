@@ -20,3 +20,14 @@
     border-color: black;
   }
 }
+
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 0.5; /* Opacity at 50% */
+    color: #f43f5e;
+  }
+  50% {
+    opacity: 1; /* Opacity at 100% */
+  }
+}

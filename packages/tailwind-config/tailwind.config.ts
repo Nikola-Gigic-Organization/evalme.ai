@@ -38,6 +38,10 @@ const config: Omit<Config, "content"> = {
       height: {
         app: heightWithoutHeader,
       },
+      animation: {
+        fade: "fade 3s infinite",
+        "fade-delay": "fade 3s infinite 1500ms",
+      },
     },
     screens: screenSizes,
   },
