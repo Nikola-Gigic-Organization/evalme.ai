@@ -7,7 +7,7 @@ export default function Page() {
         <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
           / Recently Started Topics /
         </span>
-        <div className="flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
+        <div className="bg-dotted-spacing-4 bg-dotted-gray-500 flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
           <TopicCard
             slug="next-js"
             title="Next.js"
@@ -28,7 +28,7 @@ export default function Page() {
         <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
           / Completed Topics /
         </span>
-        <div className="flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
+        <div className="bg-dotted-spacing-4 bg-dotted-gray-500 flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
           <TopicCard
             slug="tailwind-css"
             title="Tailwind CSS"

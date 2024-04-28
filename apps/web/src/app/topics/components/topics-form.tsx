@@ -80,7 +80,7 @@ const TopicsForm: FC<{
           )}
         </div>
       </div>
-      <div className="flex w-full flex-1 flex-wrap gap-8 border-l-4 border-t-4 border-black p-4">
+      <div className="bg-dotted-spacing-4 bg-dotted-gray-500 flex w-full flex-1 flex-wrap gap-8 border-l-4 border-t-4 border-black p-4">
         {filteredTopics?.map((topic) => (
           <TopicCard
             key={topic?.title}
