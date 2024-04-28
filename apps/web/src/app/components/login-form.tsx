@@ -19,7 +19,7 @@ export default function LoginForm() {
             name="email"
             id="email"
             placeholder="Email"
-            className="w-full border-b border-black bg-white p-1 outline-0 ring-0"
+            className="w-full border-b border-black bg-white px-2 py-1 outline-0 ring-0"
           />
           <input
             type="password"
@@ -27,7 +27,7 @@ export default function LoginForm() {
             id="password"
             placeholder="Password"
             autoComplete="new-password"
-            className="w-full border-b border-black bg-white p-1 outline-0 ring-0"
+            className="w-full border-b border-black bg-white px-2 py-1 outline-0 ring-0"
           />
           <div className="group relative h-11 w-24">
             <button
