@@ -1,15 +1,22 @@
 import NextAuth from "next-auth";
-import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import { z } from "zod";
 import dotenv from "dotenv";
+import { match, P } from "ts-pattern";
 import { LoginDocument } from "@/gql/graphql";
 import { apolloClient } from ".";
-import { match, P } from "ts-pattern";
+import { authConfig } from "./auth.config";
 
 dotenv.config();
 
-export const { auth, signIn, signOut } = NextAuth({
+export const {
+  auth,
+  signIn,
+  signOut,
+  handlers: { GET, POST },
+} = NextAuth({
   ...authConfig,
   secret: process.env.AUTH_SECRET,
   providers: [
@@ -67,6 +74,23 @@ export const { auth, signIn, signOut } = NextAuth({
 
         return null;
       },
+    }),
+    GoogleProvider({
+      name: "Google",
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+    }),
+    GitHubProvider({
+      name: "GitHub",
+      clientId: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
   ],
 });

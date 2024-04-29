@@ -25,6 +25,14 @@ export async function authenticate(
   }
 }
 
+export async function authenticateWithGoogle() {
+  await signIn("google", { callbackUrl: "/dashboard" });
+}
+
+export async function authenticateWithGithub() {
+  await signIn("github", { callbackUrl: "/dashboard" });
+}
+
 export async function onSignOut() {
   await signOut({ redirectTo: "/" });
 }

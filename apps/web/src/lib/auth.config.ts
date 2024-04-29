@@ -1,4 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
+import { apolloClient } from ".";
+import { GetUserDocument } from "@/gql/graphql";
+import { NextResponse } from "next/server";
 
 const sessionMaxAge = 30 * 24 * 60 * 60;
 
@@ -7,20 +10,34 @@ export const authConfig = {
     signIn: "/login",
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    authorized({ auth, request: { nextUrl, url } }) {
       if (nextUrl.pathname === "/") return true;
 
       const isLoggedIn = !!auth?.user;
-      if (isLoggedIn) return true;
+      if (isLoggedIn) {
+        if (nextUrl.pathname === "/login") {
+          const absoluteUrl = url.split("/login")[0];
+          return NextResponse.redirect(`${absoluteUrl}/dashboard`);
+        }
+        return true;
+      }
       return false;
+    },
+    signIn: async ({ user, account, profile, email, credentials }) => {
+      console.log(">>> account: ", account);
+      if (account?.provider === "google") {
+        if (profile?.email_verified) {
+          return true;
+        }
 
-      // if (nextUrl.pathname !== "/") {
-      //   if (isLoggedIn) return true;
-      //   return false; // Redirect unauthenticated users to login page
-      // } else if (isLoggedIn) {
-      //   return Response.redirect(new URL("/dashboard", nextUrl));
-      // }
-      // return true;
+        return false;
+      }
+
+      if (account?.provider === "github") {
+        return true;
+      }
+
+      return true;
     },
     session: async ({ session, token }) => {
       if (session?.user && token?.sub) {
@@ -35,6 +52,7 @@ export const authConfig = {
       return token;
     },
   },
+  secret: process.env.AUTH_SECRET,
   session: {
     strategy: "jwt",
     maxAge: sessionMaxAge,

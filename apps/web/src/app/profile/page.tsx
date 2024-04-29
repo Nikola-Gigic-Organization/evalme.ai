@@ -11,6 +11,8 @@ export default async function Page() {
     variables: { where: { id: session?.user?.id } },
   });
   const user = userData.data?.user;
+  console.log(">>> session", session);
+  console.log(">>> user", user);
 
   const onSave = async (data: FormData) => {
     "use server";
@@ -28,7 +30,7 @@ export default async function Page() {
       await apolloClient.mutate({
         mutation: UpdateUserDocument,
         variables: {
-          where: { id: user.id },
+          where: { id: user?.id },
           data: { password },
         },
       });

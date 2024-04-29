@@ -1,7 +1,11 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { authenticate } from "@/app/actions";
+import {
+  authenticate,
+  authenticateWithGithub,
+  authenticateWithGoogle,
+} from "@/app/actions";
 import { GithubOriginal, GoogleOriginal } from "devicons-react";
 
 export default function LoginForm() {
@@ -46,7 +50,10 @@ export default function LoginForm() {
         <div className="grid w-full grid-cols-2 place-items-center gap-4">
           <div className="group relative h-11 w-full">
             <button
-              onClick={() => {}}
+              type="button"
+              onClick={async () => {
+                await authenticateWithGoogle();
+              }}
               className="absolute bottom-1 left-1 z-10 flex h-full w-full items-center justify-center space-x-1 border border-black bg-white transition-all duration-150 group-hover:bottom-2 group-hover:left-2"
             >
               <GoogleOriginal className="h-6 w-6" />
@@ -55,7 +62,13 @@ export default function LoginForm() {
             <div className="absolute bottom-0 left-0 h-full w-full bg-black" />
           </div>
           <div className="group relative h-11 w-full">
-            <button className="absolute bottom-1 left-1 z-10 flex h-full w-full items-center justify-center space-x-1 border border-black bg-white transition-all duration-150 group-hover:bottom-2 group-hover:left-2">
+            <button
+              type="button"
+              onClick={async () => {
+                await authenticateWithGithub();
+              }}
+              className="absolute bottom-1 left-1 z-10 flex h-full w-full items-center justify-center space-x-1 border border-black bg-white transition-all duration-150 group-hover:bottom-2 group-hover:left-2"
+            >
               <GithubOriginal className="h-6 w-6" />
               <span>Github</span>
             </button>
