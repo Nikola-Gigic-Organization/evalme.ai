@@ -24,7 +24,6 @@ export const authConfig = {
       return false;
     },
     signIn: async ({ user, account, profile, email, credentials }) => {
-      console.log(">>> account: ", account);
       if (account?.provider === "google") {
         if (profile?.email_verified) {
           return true;
