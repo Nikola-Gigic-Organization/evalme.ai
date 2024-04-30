@@ -1,7 +1,12 @@
 import type { NextAuthConfig } from "next-auth";
-import { apolloClient } from ".";
-import { GetUserDocument } from "@/gql/graphql";
 import { NextResponse } from "next/server";
+import {
+  CreateUserDocument,
+  GetUserDocument,
+  LoginDocument,
+} from "@/gql/graphql";
+import { apolloClient, generatePassword } from ".";
+import registerUser from "./register-user";
 
 const sessionMaxAge = 30 * 24 * 60 * 60;
 
@@ -23,9 +28,16 @@ export const authConfig = {
       }
       return false;
     },
-    signIn: async ({ user, account, profile, email, credentials }) => {
+    signIn: async ({ account, profile }) => {
+      if (!account) return false;
+
       if (account?.provider === "google") {
         if (profile?.email_verified) {
+          const { error, status } = await registerUser(
+            profile.email,
+            profile.name,
+          );
+
           return true;
         }
 
@@ -33,6 +45,11 @@ export const authConfig = {
       }
 
       if (account?.provider === "github") {
+        const { error, status } = await registerUser(
+          profile?.email,
+          profile?.name,
+        );
+
         return true;
       }
 
@@ -44,7 +61,7 @@ export const authConfig = {
       }
       return session;
     },
-    jwt: async ({ token, user, session }) => {
+    jwt: async ({ token, session }) => {
       if (session) {
         session.jwt = token;
       }

@@ -8,11 +8,13 @@ export default async function Page() {
   const session = await auth();
   const userData = await apolloClient.query({
     query: GetUserDocument,
-    variables: { where: { id: session?.user?.id } },
+    variables: {
+      where: {
+        email: session?.user?.email,
+      },
+    },
   });
   const user = userData.data?.user;
-  console.log(">>> session", session);
-  console.log(">>> user", user);
 
   const onSave = async (data: FormData) => {
     "use server";
