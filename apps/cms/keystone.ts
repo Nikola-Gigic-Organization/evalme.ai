@@ -8,12 +8,15 @@
 import { config } from "@keystone-6/core";
 
 // to keep this file tidy, we define our schema in a different file
-import { lists } from "./schema";
+import { lists, typeDefs, resolvers } from "./schema";
 
 // authentication is configured separately here too, but you might move this elsewhere
 // when you write your list-level access control functions, as they typically rely on session data
 import { withAuth, session } from "./auth";
 import dotenv from "dotenv";
+
+import { mergeSchemas } from "@graphql-tools/schema";
+import { mergeTypeDefs, mergeResolvers } from "@graphql-tools/merge";
 
 dotenv.config();
 
@@ -28,6 +31,12 @@ export default withAuth(
       prismaClientPath: "node_modules/.prisma/client",
     },
     lists,
+    extendGraphqlSchema: (schema) =>
+      mergeSchemas({
+        schemas: [schema],
+        typeDefs: mergeTypeDefs(typeDefs),
+        resolvers: mergeResolvers(resolvers),
+      }),
     session,
   }),
 );

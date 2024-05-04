@@ -9,13 +9,19 @@
     "postinstall": "keystone build --no-ui --frozen"
   },
   "dependencies": {
+    "@graphql-tools/merge": "^9.0.4",
+    "@graphql-tools/schema": "^10.0.3",
     "@keystone-6/auth": "^7.0.0",
     "@keystone-6/core": "^5.0.0",
     "@keystone-6/fields-document": "^7.0.0",
     "@keystone-ui/core": "^5.0.2",
+    "@prisma/client": "^5.13.0",
     "dotenv": "^16.4.5",
     "next": "^13.5.3",
     "typescript": "^4.9.5"
   },
-  "packageManager": "pnpm@8.9.0"
+  "packageManager": "pnpm@8.9.0",
+  "devDependencies": {
+    "prisma": "^5.13.0"
+  }
 }

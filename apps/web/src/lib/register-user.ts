@@ -1,4 +1,5 @@
 const registerUser = async (
+  userId?: string | null,
   email?: string | null,
   name?: string | null,
 ): Promise<{ error: string; status: number }> => {
@@ -8,6 +9,10 @@ const registerUser = async (
 
   if (!process.env.AUTH_SECRET) {
     throw new Error("AUTH_SECRET is not defined");
+  }
+
+  if (!userId) {
+    throw new Error("User ID is required");
   }
 
   if (!email) {
@@ -22,6 +27,7 @@ const registerUser = async (
     method: "POST",
     body: JSON.stringify({
       secret: process.env.AUTH_SECRET,
+      userId: userId,
       email: email,
       name: name,
     }),

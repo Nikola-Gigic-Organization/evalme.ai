@@ -1,6 +1,7 @@
 query GetUser($where: UserWhereUniqueInput!) {
   user(where: $where) {
     id
+    oAuthId
     email
   }
 }

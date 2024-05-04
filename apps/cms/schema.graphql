@@ -3,6 +3,7 @@
 
 type User {
   id: ID!
+  oAuthId: String
   name: String
   email: String
   password: PasswordState
@@ -28,6 +29,7 @@ input UserWhereInput {
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
   id: IDFilter
+  oAuthId: StringNullableFilter
   name: StringFilter
   email: StringFilter
   topicAnswers: UserAnswerManyRelationFilter
@@ -46,6 +48,26 @@ input IDFilter {
   not: IDFilter
 }
 
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: StringNullableFilter
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
 input StringFilter {
   equals: String
   in: [String!]
@@ -59,11 +81,6 @@ input StringFilter {
   endsWith: String
   mode: QueryMode
   not: NestedStringFilter
-}
-
-enum QueryMode {
-  default
-  insensitive
 }
 
 input NestedStringFilter {
@@ -99,6 +116,7 @@ input DateTimeNullableFilter {
 
 input UserOrderByInput {
   id: OrderDirection
+  oAuthId: OrderDirection
   name: OrderDirection
   email: OrderDirection
   createdAt: OrderDirection
@@ -111,6 +129,7 @@ enum OrderDirection {
 }
 
 input UserUpdateInput {
+  oAuthId: String
   name: String
   email: String
   password: String
@@ -132,6 +151,7 @@ input UserUpdateArgs {
 }
 
 input UserCreateInput {
+  oAuthId: String
   name: String
   email: String
   password: String
@@ -155,6 +175,7 @@ type Topic {
   viewerAnsweredQuestions: [UserAnswer]
   viewerAnsweredQuestionsCount: Int
   viewerAnsweredAllQuestions: Boolean
+  viewerTopicProgressStatus: String
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   createdAt: DateTime
@@ -534,6 +555,8 @@ type Query {
   userAnswersCount(where: UserAnswerWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
+  getViewerInProgressTopics: [Topic!]!
+  getViewerCompletedTopics: [Topic]
 }
 
 union AuthenticatedItem = User
@@ -638,4 +661,10 @@ type KeystoneAdminUISort {
 enum KeystoneAdminUISortDirection {
   ASC
   DESC
+}
+
+enum TopicProgressStatus {
+  NotStarted
+  InProgress
+  Completed
 }

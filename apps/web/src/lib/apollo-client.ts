@@ -29,7 +29,7 @@ class ExtendedApolloClient {
       ssrForceFetchDelay: 100, // in milliseconds
       defaultOptions: {
         query: {
-          fetchPolicy: "cache-first",
+          fetchPolicy: "no-cache",
         },
       },
     });

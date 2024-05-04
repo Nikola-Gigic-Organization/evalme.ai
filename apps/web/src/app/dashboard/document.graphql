@@ -1,0 +1,27 @@
+query GetInProgressTopcis {
+  getViewerInProgressTopics {
+    id
+    slug
+    title
+    description
+    tags {
+      id
+      name
+    }
+    viewerAnsweredAllQuestions
+  }
+}
+
+query GetCompletedTopics {
+  getViewerCompletedTopics {
+    id
+    slug
+    title
+    description
+    tags {
+      id
+      name
+    }
+    viewerAnsweredAllQuestions
+  }
+}

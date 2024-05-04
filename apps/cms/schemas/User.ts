@@ -11,6 +11,17 @@ import {
 const User: ListConfig<Lists.User.TypeInfo> = list({
   access: allowAll,
   fields: {
+    oAuthId: text({
+      db: {
+        isNullable: true,
+      },
+      ui: {
+        description: "The ID of the user in the OAuth provider",
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "read" },
+        listView: { fieldMode: "read" },
+      },
+    }),
     name: text({ validation: { isRequired: true } }),
     email: text({
       validation: { isRequired: true },

@@ -9,6 +9,12 @@ import {
 } from "@keystone-6/core/fields";
 import { getSessionOrFail } from "../lib";
 
+enum TopicProgressStatus {
+  NotStarted = "NotStarted",
+  InProgress = "InProgress",
+  Completed = "Completed",
+}
+
 export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
   access: allowAll,
   fields: {
@@ -31,7 +37,16 @@ export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
             const userId = getSessionOrFail(context);
             const userAnswers = await context.prisma.userAnswer.findMany({
               where: {
-                userId,
+                OR: [
+                  {
+                    userId,
+                  },
+                  {
+                    user: {
+                      oAuthId: userId,
+                    },
+                  },
+                ],
                 question: {
                   topicId: item.id,
                 },
@@ -58,7 +73,16 @@ export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
             const userId = getSessionOrFail(context);
             const userAnswers = await context.prisma.userAnswer.count({
               where: {
-                userId,
+                OR: [
+                  {
+                    userId,
+                  },
+                  {
+                    user: {
+                      oAuthId: userId,
+                    },
+                  },
+                ],
                 question: {
                   topicId: item.id,
                 },
@@ -85,7 +109,16 @@ export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
             const userId = getSessionOrFail(context);
             const userAnswers = await context.prisma.userAnswer.findMany({
               where: {
-                userId,
+                OR: [
+                  {
+                    userId,
+                  },
+                  {
+                    user: {
+                      oAuthId: userId,
+                    },
+                  },
+                ],
                 question: {
                   topicId: item.id,
                 },
@@ -109,6 +142,55 @@ export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
         },
       },
     }),
+    viewerTopicProgressStatus: virtual({
+      field: (lists) =>
+        graphql.field({
+          type: graphql.String,
+          resolve: async (item, args, context) => {
+            const userId = getSessionOrFail(context);
+            const userAnswers = await context.prisma.userAnswer.findMany({
+              where: {
+                OR: [
+                  {
+                    userId,
+                  },
+                  {
+                    user: {
+                      oAuthId: userId,
+                    },
+                  },
+                ],
+                question: {
+                  topicId: item.id,
+                },
+              },
+            });
+            const questionsCount = await context.prisma.topicQuestion.count({
+              where: {
+                topicId: item.id,
+              },
+            });
+
+            if (userAnswers.length === 0) {
+              return TopicProgressStatus.NotStarted;
+            }
+
+            if (userAnswers.length < questionsCount) {
+              return TopicProgressStatus.InProgress;
+            }
+
+            return TopicProgressStatus.Completed;
+          },
+        }),
+      ui: {
+        listView: {
+          fieldMode: "hidden",
+        },
+        itemView: {
+          fieldMode: "hidden",
+        },
+      },
+    }),
     tags: relationship({ ref: "Tag", many: true }),
     createdAt: timestamp({
       defaultValue: { kind: "now" },
@@ -118,3 +200,103 @@ export const Topic: ListConfig<Lists.Topic.TypeInfo> = list({
     }),
   },
 });
+
+export const TopicTypeDefs = `
+  enum TopicProgressStatus {
+    NotStarted
+    InProgress
+    Completed
+  }
+
+  type Query {
+    getViewerInProgressTopics: [Topic!]!
+    getViewerCompletedTopics: [Topic]
+  }
+`;
+
+export const TopicResolvers = {
+  Query: {
+    getViewerInProgressTopics: async (
+      root: any,
+      args: any,
+      context: Context,
+    ) => {
+      const userId = getSessionOrFail(context);
+      const topics = await context.prisma.topic.findMany({
+        where: {
+          questions: {
+            some: {
+              from_UserAnswer_question: {
+                some: {
+                  userId,
+                },
+              },
+            },
+          },
+        },
+        select: {
+          questions: {
+            select: {
+              id: true,
+              from_UserAnswer_question: true,
+            },
+          },
+        },
+      });
+      const inProgressTopics = topics.filter((topic) => {
+        const answeredQuestions = topic.questions.filter(
+          (question) => question.from_UserAnswer_question.length > 0,
+        );
+
+        return answeredQuestions.length < topic.questions.length;
+      });
+
+      return inProgressTopics;
+    },
+    getViewerCompletedTopics: async (
+      root: any,
+      args: any,
+      context: Context,
+    ) => {
+      const userId = getSessionOrFail(context);
+      const topics = await context.prisma.topic.findMany({});
+      const completedTopics = await Promise.all(
+        topics.map(async (topic) => {
+          const questionsCount = await context.prisma.topicQuestion.count({
+            where: {
+              topicId: topic.id,
+            },
+          });
+
+          if (questionsCount === 0) {
+            return;
+          }
+
+          const userAnswers = await context.prisma.userAnswer.findMany({
+            where: {
+              OR: [
+                {
+                  userId,
+                },
+                {
+                  user: {
+                    oAuthId: userId,
+                  },
+                },
+              ],
+              question: {
+                topicId: topic.id,
+              },
+            },
+          });
+
+          if (userAnswers.length === questionsCount) {
+            return topic;
+          }
+        }),
+      ).then((topics) => topics.filter((topic) => topic !== undefined));
+
+      return completedTopics ?? [];
+    },
+  },
+};

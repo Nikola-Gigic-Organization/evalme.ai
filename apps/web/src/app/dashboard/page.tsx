@@ -1,27 +1,48 @@
 import { TopicCard } from "@repo/ui";
+import {
+  GetInProgressTopcisDocument,
+  GetCompletedTopicsDocument,
+} from "@/gql/graphql";
+import { apolloClient } from "@/lib";
 
-export default function Page() {
+export default async function Page() {
+  const { data: inProgressTopicsData } = await apolloClient.query({
+    query: GetInProgressTopcisDocument,
+  });
+
+  const { data: completedTopicsData } = await apolloClient.query({
+    query: GetCompletedTopicsDocument,
+  });
+
   return (
     <div className="w-full space-y-16 py-8 pl-8">
       <div className="flex w-full flex-col">
         <span className="mr-8 border-b-4 border-black pb-4 text-2xl font-bold">
-          / Recently Started Topics /
+          / In Progress Topics /
         </span>
         <div className="bg-dotted-spacing-4 bg-dotted-gray-500 flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
-          <TopicCard
-            slug="next-js"
-            title="Next.js"
-            description="The React Framework for Production"
-            tags={["React", "Framework"]}
-            viewerAnsweredAllQuestions={true}
-          />
-          <TopicCard
-            slug="react"
-            title="React"
-            description="A JavaScript library for building user interfaces"
-            tags={["JavaScript", "Library"]}
-            viewerAnsweredAllQuestions={true}
-          />
+          {inProgressTopicsData.getViewerInProgressTopics?.length ? (
+            inProgressTopicsData.getViewerInProgressTopics.map((topic) => (
+              <TopicCard
+                key={topic.slug}
+                slug={topic.slug}
+                title={topic.title}
+                description={topic.description}
+                tags={topic.tags?.map((tag) => tag.name ?? "")}
+                viewerAnsweredAllQuestions={Boolean(
+                  topic.viewerAnsweredAllQuestions,
+                )}
+              />
+            ))
+          ) : (
+            <TopicCard
+              slug={""}
+              title={"No in progress topics"}
+              description={"You have not started any topics yet"}
+              tags={[]}
+              viewerAnsweredAllQuestions={false}
+            />
+          )}
         </div>
       </div>
       <div className="flex w-full flex-col">
@@ -29,55 +50,31 @@ export default function Page() {
           / Completed Topics /
         </span>
         <div className="bg-dotted-spacing-4 bg-dotted-gray-500 flex w-full space-x-8 overflow-x-auto border-l-4 border-black p-4">
-          <TopicCard
-            slug="tailwind-css"
-            title="Tailwind CSS"
-            description="A utility-first CSS framework"
-            tags={["CSS", "Framework"]}
-            viewerAnsweredAllQuestions={true}
-          />
-          <TopicCard
-            slug="graphql"
-            title="GraphQL"
-            description="A query language for your API"
-            tags={["API", "Query"]}
-            viewerAnsweredAllQuestions={true}
-          />
-          <TopicCard
-            slug="apollo-client"
-            title="Apollo Client"
-            description="A fully-featured caching GraphQL client"
-            tags={["GraphQL", "Client"]}
-            viewerAnsweredAllQuestions={true}
-          />
-          <TopicCard
-            slug="apollo-server"
-            title="Apollo Server"
-            description="A production-ready GraphQL server"
-            tags={["GraphQL", "Server"]}
-            viewerAnsweredAllQuestions={true}
-          />
-          <TopicCard
-            slug="prisma"
-            title="Prisma"
-            description="Next-generation ORM for Node.js and TypeScript"
-            tags={["ORM", "Node.js"]}
-            viewerAnsweredAllQuestions={true}
-          />
-          <TopicCard
-            slug="typescript"
-            title="TypeScript"
-            description="JavaScript that scales"
-            tags={["JavaScript", "Type"]}
-            viewerAnsweredAllQuestions={true}
-          />
-          <TopicCard
-            slug="jest"
-            title="Jest"
-            description="Delightful JavaScript Testing"
-            tags={["JavaScript", "Testing"]}
-            viewerAnsweredAllQuestions={true}
-          />
+          {completedTopicsData.getViewerCompletedTopics?.length !== 0 ? (
+            completedTopicsData.getViewerCompletedTopics?.map(
+              (topic) =>
+                topic && (
+                  <TopicCard
+                    key={topic.slug}
+                    slug={topic.slug}
+                    title={topic.title}
+                    description={topic.description}
+                    tags={topic.tags?.map((tag) => tag.name ?? "")}
+                    viewerAnsweredAllQuestions={Boolean(
+                      topic.viewerAnsweredAllQuestions,
+                    )}
+                  />
+                ),
+            )
+          ) : (
+            <TopicCard
+              slug={""}
+              title={"No completed topics"}
+              description={"You have not completed any topics yet"}
+              tags={[]}
+              viewerAnsweredAllQuestions={false}
+            />
+          )}
         </div>
       </div>
     </div>

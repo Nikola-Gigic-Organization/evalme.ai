@@ -26,7 +26,16 @@ export const TopicQuestion: ListConfig<Lists.TopicQuestion.TypeInfo> = list({
             const userId = getSessionOrFail(context);
             const viewerAnswer = await context.prisma.userAnswer.findFirst({
               where: {
-                userId: userId,
+                OR: [
+                  {
+                    userId,
+                  },
+                  {
+                    user: {
+                      oAuthId: userId,
+                    },
+                  },
+                ],
                 questionId: item.id,
               },
             });

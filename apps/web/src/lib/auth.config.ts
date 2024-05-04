@@ -28,12 +28,13 @@ export const authConfig = {
       }
       return false;
     },
-    signIn: async ({ account, profile }) => {
+    signIn: async ({ account, profile, user }) => {
       if (!account) return false;
 
       if (account?.provider === "google") {
         if (profile?.email_verified) {
           const { error, status } = await registerUser(
+            user.id,
             profile.email,
             profile.name,
           );

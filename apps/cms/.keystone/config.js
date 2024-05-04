@@ -42,6 +42,17 @@ var import_fields = require("@keystone-6/core/fields");
 var User = (0, import_core.list)({
   access: import_access.allowAll,
   fields: {
+    oAuthId: (0, import_fields.text)({
+      db: {
+        isNullable: true
+      },
+      ui: {
+        description: "The ID of the user in the OAuth provider",
+        createView: { fieldMode: "hidden" },
+        itemView: { fieldMode: "read" },
+        listView: { fieldMode: "read" }
+      }
+    }),
     name: (0, import_fields.text)({ validation: { isRequired: true } }),
     email: (0, import_fields.text)({
       validation: { isRequired: true },
@@ -97,7 +108,16 @@ var Topic = (0, import_core2.list)({
           const userId = getSessionOrFail_default(context);
           const userAnswers = await context.prisma.userAnswer.findMany({
             where: {
-              userId,
+              OR: [
+                {
+                  userId
+                },
+                {
+                  user: {
+                    oAuthId: userId
+                  }
+                }
+              ],
               question: {
                 topicId: item.id
               }
@@ -122,7 +142,16 @@ var Topic = (0, import_core2.list)({
           const userId = getSessionOrFail_default(context);
           const userAnswers = await context.prisma.userAnswer.count({
             where: {
-              userId,
+              OR: [
+                {
+                  userId
+                },
+                {
+                  user: {
+                    oAuthId: userId
+                  }
+                }
+              ],
               question: {
                 topicId: item.id
               }
@@ -147,7 +176,16 @@ var Topic = (0, import_core2.list)({
           const userId = getSessionOrFail_default(context);
           const userAnswers = await context.prisma.userAnswer.findMany({
             where: {
-              userId,
+              OR: [
+                {
+                  userId
+                },
+                {
+                  user: {
+                    oAuthId: userId
+                  }
+                }
+              ],
               question: {
                 topicId: item.id
               }
@@ -170,6 +208,51 @@ var Topic = (0, import_core2.list)({
         }
       }
     }),
+    viewerTopicProgressStatus: (0, import_fields2.virtual)({
+      field: (lists2) => import_core2.graphql.field({
+        type: import_core2.graphql.String,
+        resolve: async (item, args, context) => {
+          const userId = getSessionOrFail_default(context);
+          const userAnswers = await context.prisma.userAnswer.findMany({
+            where: {
+              OR: [
+                {
+                  userId
+                },
+                {
+                  user: {
+                    oAuthId: userId
+                  }
+                }
+              ],
+              question: {
+                topicId: item.id
+              }
+            }
+          });
+          const questionsCount = await context.prisma.topicQuestion.count({
+            where: {
+              topicId: item.id
+            }
+          });
+          if (userAnswers.length === 0) {
+            return "NotStarted" /* NotStarted */;
+          }
+          if (userAnswers.length < questionsCount) {
+            return "InProgress" /* InProgress */;
+          }
+          return "Completed" /* Completed */;
+        }
+      }),
+      ui: {
+        listView: {
+          fieldMode: "hidden"
+        },
+        itemView: {
+          fieldMode: "hidden"
+        }
+      }
+    }),
     tags: (0, import_fields2.relationship)({ ref: "Tag", many: true }),
     createdAt: (0, import_fields2.timestamp)({
       defaultValue: { kind: "now" }
@@ -179,6 +262,90 @@ var Topic = (0, import_core2.list)({
     })
   }
 });
+var TopicTypeDefs = `
+  enum TopicProgressStatus {
+    NotStarted
+    InProgress
+    Completed
+  }
+
+  type Query {
+    getViewerInProgressTopics: [Topic!]!
+    getViewerCompletedTopics: [Topic]
+  }
+`;
+var TopicResolvers = {
+  Query: {
+    getViewerInProgressTopics: async (root, args, context) => {
+      const userId = getSessionOrFail_default(context);
+      const topics = await context.prisma.topic.findMany({
+        where: {
+          questions: {
+            some: {
+              from_UserAnswer_question: {
+                some: {
+                  userId
+                }
+              }
+            }
+          }
+        },
+        select: {
+          questions: {
+            select: {
+              id: true,
+              from_UserAnswer_question: true
+            }
+          }
+        }
+      });
+      const inProgressTopics = topics.filter((topic) => {
+        const answeredQuestions = topic.questions.filter(
+          (question) => question.from_UserAnswer_question.length > 0
+        );
+        return answeredQuestions.length < topic.questions.length;
+      });
+      return inProgressTopics;
+    },
+    getViewerCompletedTopics: async (root, args, context) => {
+      const userId = getSessionOrFail_default(context);
+      const topics = await context.prisma.topic.findMany({});
+      const completedTopics = await Promise.all(
+        topics.map(async (topic) => {
+          const questionsCount = await context.prisma.topicQuestion.count({
+            where: {
+              topicId: topic.id
+            }
+          });
+          if (questionsCount === 0) {
+            return;
+          }
+          const userAnswers = await context.prisma.userAnswer.findMany({
+            where: {
+              OR: [
+                {
+                  userId
+                },
+                {
+                  user: {
+                    oAuthId: userId
+                  }
+                }
+              ],
+              question: {
+                topicId: topic.id
+              }
+            }
+          });
+          if (userAnswers.length === questionsCount) {
+            return topic;
+          }
+        })
+      ).then((topics2) => topics2.filter((topic) => topic !== void 0));
+      return completedTopics ?? [];
+    }
+  }
+};
 
 // schemas/TopicQuestion.ts
 var import_core3 = require("@keystone-6/core");
@@ -198,7 +365,16 @@ var TopicQuestion = (0, import_core3.list)({
           const userId = getSessionOrFail_default(context);
           const viewerAnswer = await context.prisma.userAnswer.findFirst({
             where: {
-              userId,
+              OR: [
+                {
+                  userId
+                },
+                {
+                  user: {
+                    oAuthId: userId
+                  }
+                }
+              ],
               questionId: item.id
             }
           });
@@ -263,10 +439,12 @@ var UserAnswer = (0, import_core5.list)({
 var UserAnswer_default = UserAnswer;
 
 // schemas/index.ts
-var schemas_default = { User: User_default, Topic, TopicQuestion, Tag: Tag_default, UserAnswer: UserAnswer_default };
+var schemas = { User: User_default, Topic, TopicQuestion, Tag: Tag_default, UserAnswer: UserAnswer_default };
+var typeDefs = [TopicTypeDefs];
+var resolvers = [TopicResolvers];
 
 // schema.ts
-var lists = schemas_default;
+var lists = schemas;
 
 // auth.ts
 var import_crypto = require("crypto");
@@ -303,6 +481,8 @@ var session = (0, import_session.statelessSessions)({
 
 // keystone.ts
 var import_dotenv = __toESM(require("dotenv"));
+var import_schema2 = require("@graphql-tools/schema");
+var import_merge = require("@graphql-tools/merge");
 import_dotenv.default.config();
 var keystone_default = withAuth(
   (0, import_core6.config)({
@@ -315,6 +495,11 @@ var keystone_default = withAuth(
       prismaClientPath: "node_modules/.prisma/client"
     },
     lists,
+    extendGraphqlSchema: (schema) => (0, import_schema2.mergeSchemas)({
+      schemas: [schema],
+      typeDefs: (0, import_merge.mergeTypeDefs)(typeDefs),
+      resolvers: (0, import_merge.mergeResolvers)(resolvers)
+    }),
     session
   })
 );
