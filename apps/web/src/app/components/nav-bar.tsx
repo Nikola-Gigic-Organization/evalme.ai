@@ -17,7 +17,7 @@ const NavBar = () => {
       <form
         action={onSignOut}
         className={clsx([
-          "absolute z-20 block h-screen w-full bg-white transition-all duration-150 sm:hidden",
+          "t absolute z-20 block h-screen w-full bg-white transition-all duration-150 sm:hidden",
           { "-top-full": !isMobileMenuOpen },
           { "top-0": isMobileMenuOpen },
         ])}
