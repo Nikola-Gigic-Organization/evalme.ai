@@ -1,5 +1,7 @@
 "use client";
 
+import { RefObject, useEffect } from "react";
+import useLocationHash from "@/lib/use-location-hash";
 import { LandingPageCard } from "./components";
 import { Fragment, useRef } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
@@ -139,9 +141,26 @@ const RefButton: React.FC<{
 };
 
 export default function Page(): JSX.Element {
+  const locationHash = useLocationHash();
+
   const landingDivRef = useRef<HTMLDivElement>(null);
   const howItWorksRef = useRef<HTMLDivElement>(null);
   const everythingYouNeedRef = useRef<HTMLDivElement>(null);
+
+  const hashRefMap: { [key: string]: RefObject<HTMLDivElement> } = {
+    "#platform": landingDivRef,
+    "#how-it-works": howItWorksRef,
+    "#what-we-offer": everythingYouNeedRef,
+  };
+
+  useEffect(() => {
+    if (locationHash) {
+      const ref = hashRefMap[`${locationHash}`];
+      if (ref) {
+        ref.current?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [locationHash]);
 
   return (
     <div className="w-full overflow-x-hidden">
@@ -218,7 +237,7 @@ export default function Page(): JSX.Element {
         </div>
         <div
           ref={howItWorksRef}
-          className="sm:h-app relative flex items-center p-8"
+          className="sm:h-app relative flex items-center scroll-smooth p-8"
         >
           <div className="absolute left-0 top-4 flex w-full justify-center">
             <RefButton

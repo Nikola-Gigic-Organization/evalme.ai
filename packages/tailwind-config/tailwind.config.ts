@@ -45,6 +45,13 @@ const config: Omit<Config, "content"> = {
     },
     screens: screenSizes,
   },
-  plugins: [capitalizeFirst, require("tailwindcss-dotted-background")],
+  plugins: [
+    capitalizeFirst,
+    require("tailwindcss-dotted-background"),
+    plugin(({ addVariant, matchVariant, matchUtilities, theme }) => {
+      addVariant("not-last", "&:not(:last-child)");
+      addVariant("not-first", "&:not(:first-child)");
+    }),
+  ],
 };
 export default config;
